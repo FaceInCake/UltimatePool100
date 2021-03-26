@@ -1,15 +1,15 @@
-/**
- * Default window
- * Contains a title and whatever JPanel you put inside it.
- * Your main function should create a Runnable which just creates
- * a new one of these. Then in this classes constructor would you pass the JPanel,
- * and optionally a title, or dimensions.
- */
 package jframes;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
+/**
+ * Default window.
+ * Contains a title and whatever JPanel you put inside it.
+ * Your main function should create a Runnable which just creates
+ * a new one of these. Then in this class'es constructor would you pass the JPanel,
+ * and optionally a title, or dimensions.
+ */
 public class Window extends JFrame {
 	private static final long serialVersionUID = 1L;
 
@@ -27,7 +27,7 @@ public class Window extends JFrame {
 	 * Constructor with defaulting dimensions.
 	 * Dimensions default to 600x600
 	 * @param source The JPanel is basically the screen inside this window. Look through the jpanels package.
-	 * @param titleTitle of the window
+	 * @param title The title of the window
 	 */
 	public Window (JPanel source, String title) {
 		this(source, title, 600, 600);
@@ -37,12 +37,13 @@ public class Window extends JFrame {
 	 * Full constructor for a JFrame object.
 	 * The JFrame is basically the window itself.
 	 * @param source The JPanel is basically the screen inside this window. Look through the jpanels package.
-	 * @param title Title of the window
+	 * @param title The title of the window
 	 * @param width Width of the window
 	 * @param height Height of the window
 	 */
 	public Window (JPanel source, String title, int width, int height) {
 		super(title);
+		super.setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 		super.getContentPane().add(source);
 		super.pack();
 		super.setSize(width, height);
