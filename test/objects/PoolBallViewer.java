@@ -1,16 +1,13 @@
 package objects;
 
-import org.jogamp.java3d.AmbientLight;
-import org.jogamp.java3d.BoundingSphere;
 import org.jogamp.java3d.BranchGroup;
-import org.jogamp.java3d.PointLight;
 import org.jogamp.java3d.Transform3D;
-import org.jogamp.vecmath.Color3f;
 import org.jogamp.vecmath.Point3d;
 import org.jogamp.vecmath.Point3f;
 import org.jogamp.vecmath.Vector3d;
 
 import jpanels.BasicView;
+import lights.LightFactory;
 import objects.poolballs.*;
 
 public class PoolBallViewer extends BasicView {
@@ -27,14 +24,10 @@ public class PoolBallViewer extends BasicView {
 	public BranchGroup createContent() {
 		BranchGroup bg = new BranchGroup();
 		
-		AmbientLight al = new AmbientLight(true, new Color3f(0.2f,0.2f,0.2f));
-		al.setInfluencingBounds(new BoundingSphere(new Point3d(), 100));
-		bg.addChild(al);
-		
-		PointLight pl = new PointLight(new Color3f(1,1,1), new Point3f(0,3,0), new Point3f(1,0,0));
-		pl.setInfluencingBounds(new BoundingSphere(new Point3d(), 100));
-		bg.addChild(pl);
-		
+		bg.addChild(new AxisFrame());
+		bg.addChild(LightFactory.createAmbientLight());
+		bg.addChild(LightFactory.createPointLight(new Point3f(0.1f, 3, 0.1f)));
+				
 		bg.addChild(new RedBall(0, 0).getTG());
 		bg.addChild(new YellowBall(0.5, 0).getTG());
 		bg.addChild(new GreenBall(0, 0.5).getTG());

@@ -11,6 +11,7 @@ import javax.swing.JPanel;
 import org.jogamp.java3d.BranchGroup;
 import org.jogamp.java3d.Canvas3D;
 import org.jogamp.java3d.Transform3D;
+import org.jogamp.java3d.TransformGroup;
 import org.jogamp.java3d.utils.universe.SimpleUniverse;
 
 /**
@@ -33,6 +34,11 @@ public abstract class BasicView extends JPanel {
 	 * the environment from a POV.
 	 */
 	protected SimpleUniverse su;
+	
+	/** The width in pixels of the screen, not the window */
+	private int width;
+	/** The height in pixels of the screen, not the window */
+	private int height;
 
 	/**
 	 * Default constructor
@@ -49,11 +55,30 @@ public abstract class BasicView extends JPanel {
 		// Believe it or not, it's simple. Really crazy programs might not use this.
 		// We're not writing a crazy program, one camera for every user is all we want
 		this.su = new SimpleUniverse(this.screen);
+		// Fill in our width & height
+		this.width = this.getBounds().width;
+		this.height = this.getBounds().height;
 		// Add the BranchGroup content
 		this.su.addBranchGraph(this.createContent());
 		// Makes sure the screen takes up the entire window
 		super.setLayout(new BorderLayout());
 		super.add("Center", this.screen);		
+	}
+	
+	/**
+	 * Returns the width of the screen,
+	 * in pixels.
+	 */
+	public int getScreenWidth () {
+		return this.width;
+	}
+	
+	/**
+	 * Returns the height of the screen,
+	 * in pixels.
+	 */
+	public int getScreenHeight () {
+		return this.height;
 	}
 	
 	/**
@@ -76,11 +101,27 @@ public abstract class BasicView extends JPanel {
 	}
 	
 	/**
+	 * Shortcut function for getting the transformgroup of this viewing platform
+	 * @return The TransformGroup of the camera
+	 */
+	public TransformGroup getViewTransformGroup () {
+		return this.su.getViewingPlatform().getViewPlatformTransform();
+	}
+	
+	/**
 	 * Sets the view transform of the SimpleUniverse to be t
 	 * @param t The Transform3D to set to
 	 */
 	public void setViewTransform (Transform3D t) {
 		this.su.getViewingPlatform().getViewPlatformTransform().setTransform(t);
+	}
+	
+	/**
+	 * Returns this view's canvas object
+	 * @return The Canvas3D object this view draws to
+	 */
+	public Canvas3D getCanvas () {
+		return this.screen;
 	}
 	
 	/**
