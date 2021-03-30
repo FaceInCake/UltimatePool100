@@ -98,39 +98,14 @@ java.awt.event.MouseListener {
 		right.set(Math.cos(-viewYaw), 0, Math.sin(-viewYaw));
 		up.cross(right, forward);
 	}
-	
-	private static double getTimeDifference (WakeupCriterion wc) {
-		WakeupOnElapsedFrames wef = (WakeupOnElapsedFrames)wc;
-		int f = wef.getElapsedFrameCount()+1;
-		return 0.016 * f;
-	}
-		
+
+	/**
+	 * Checks key presses and updates the ViewTransform
+	 */
 	@Override
 	public void processStimulus(Iterator<WakeupCriterion> arg0) {
 		// Time difference in seconds
-		double dt;
-		WakeupCriterion wc = arg0.next();
-		if (wc instanceof WakeupOnElapsedFrames)
-			dt = getTimeDifference(wc);
-		else {
-			dt = 0.0;
-			System.out.println("Not FrameElapse wakeup");
-		}
-		// Check angle change
-		boolean update = false;
-		if (keys.contains(KeyEvent.VK_J)) {
-			viewYaw += angSpeed*dt ; update=true;
-		} else
-		if (keys.contains(KeyEvent.VK_L)) {
-			viewYaw -= angSpeed*dt ; update=true;
-		}
-		if (keys.contains(KeyEvent.VK_I)) {
-			viewPitch = Math.min(viewPitch+angSpeed*dt, PI_2) ; update=true;
-		} else
-		if (keys.contains(KeyEvent.VK_K)) {
-			viewPitch = Math.max(viewPitch-angSpeed*dt, -PI_2) ; update=true;
-		}
-		if (update) this.updateDirs();
+		double dt = 0.016;
 		// Check movement
 		if (keys.contains(KeyEvent.VK_W)) viewPos.scaleAdd(+movSpeed*dt, forward, viewPos);
 		if (keys.contains(KeyEvent.VK_A)) viewPos.scaleAdd(-movSpeed*dt, right, viewPos);
@@ -162,8 +137,8 @@ java.awt.event.MouseListener {
 		this.lastMX = arg0.getX();
 		this.lastMY = arg0.getY();
 		// Moving across half the screen rotates 45deg or pi/4 radians
-		viewYaw += Math.PI * difX / arg0.getComponent().getWidth() / 2;
-		viewPitch += Math.PI * difY / arg0.getComponent().getHeight() / 2;
+		viewYaw += PI_2 * difX / arg0.getComponent().getWidth();
+		viewPitch += PI_2 * difY / arg0.getComponent().getHeight();
 		updateDirs();
 	}
 

@@ -27,13 +27,13 @@ public abstract class BasicView extends JPanel {
 	 * Contains stuff for rendering the
 	 * environment to the JPanel.
 	 */
-	protected Canvas3D screen;
+	private Canvas3D screen;
 	
 	/**
 	 * Contains stuff for viewing the
 	 * the environment from a POV.
 	 */
-	protected SimpleUniverse su;
+	private SimpleUniverse su;
 	
 	/** The width in pixels of the screen, not the window */
 	private int width;
@@ -55,9 +55,6 @@ public abstract class BasicView extends JPanel {
 		// Believe it or not, it's simple. Really crazy programs might not use this.
 		// We're not writing a crazy program, one camera for every user is all we want
 		this.su = new SimpleUniverse(this.screen);
-		// Fill in our width & height
-		this.width = this.getBounds().width;
-		this.height = this.getBounds().height;
 		// Add the BranchGroup content
 		this.su.addBranchGraph(this.createContent());
 		// Makes sure the screen takes up the entire window
@@ -70,7 +67,7 @@ public abstract class BasicView extends JPanel {
 	 * in pixels.
 	 */
 	public int getScreenWidth () {
-		return this.width;
+		return this.getCanvas().getWidth();
 	}
 	
 	/**
@@ -78,7 +75,7 @@ public abstract class BasicView extends JPanel {
 	 * in pixels.
 	 */
 	public int getScreenHeight () {
-		return this.height;
+		return this.getCanvas().getHeight();
 	}
 	
 	/**
