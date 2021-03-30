@@ -9,7 +9,7 @@ import org.jogamp.vecmath.Vector3d;
 import behaviours.FreeCamController;
 import jpanels.BasicView;
 import lights.LightFactory;
-import objects.poolballs.BlueBall;
+import objects.PoolBall.Type;
 
 public class PoolBallTest extends BasicView {
 	private static final long serialVersionUID = 1L;
@@ -36,7 +36,7 @@ public class PoolBallTest extends BasicView {
 		content.addChild(fcc);
 
 		
-		content.addChild(new BlueBall(0, 0).getTG());
+		content.addChild(new PoolBall(Type.BLUE, 0, 0).getTG());
 		
 		content.compile();
 		return content;

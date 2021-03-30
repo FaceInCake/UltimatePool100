@@ -1,4 +1,4 @@
-package objects.poolballs;
+package objects;
 
 import org.jogamp.java3d.Appearance;
 import org.jogamp.java3d.Material;
@@ -12,9 +12,8 @@ import org.jogamp.vecmath.Vector3d;
  * Abstract class for a pool ball.
  * Subclass this, calling the super constructor and
  * filling in the appropriate values (colour and point value)
- * @author Matthew Eppel
  */
-public abstract class PoolBall {
+public class PoolBall {
 	/** The Y-up value that all balls spawn and rest at */
 	private static double height = 0.5;
 	/** The transformgroup that carries the ball's sphere object */
@@ -27,15 +26,45 @@ public abstract class PoolBall {
 	private Color3f clr;
 	/** Worldspace position of this ball */
 	private Vector3d pos;
+	
+	/**
+	 * Enum for every different type of Snooker ball
+	 * <p>
+	 * Used in the PoolBall constructor.<br>
+	 * Simply pass one of the static fields.
+	 * @see PoolBall#PoolBall(Type, double, double)
+	 */
+	public static class Type {
+		/** Number of points this type of pool ball is worth */
+		private int pointValue;
+		/** Colour of this type of pool ball */
+		private Color3f colour;
+		
+		/** Private constructor for initializing the enum */
+		private Type (int p, Color3f c) {
+			this.pointValue = p;
+			this.colour = c;
+		}
+		
+		public static Type CUE    = new Type(0, new Color3f(0.875f, 0.875f,  0.75f  ));
+		public static Type RED    = new Type(1, new Color3f(0.875f, 0.0625f, 0.0625f));
+		public static Type YELLOW = new Type(2, new Color3f(0.75f,  0.75f,   0.125f ));
+		public static Type GREEN  = new Type(3, new Color3f(0.125f, 0.5f,    0.125f ));
+		public static Type BROWN  = new Type(4, new Color3f(0.375f, 0.1875f, 0.0625f));
+		public static Type BLUE   = new Type(5, new Color3f(0.125f, 0.125f,  0.875f ));
+		public static Type PINK   = new Type(6, new Color3f(0.875f, 0.375f,  0.625f ));
+		public static Type BLACK  = new Type(7, new Color3f(0.125f, 0.125f,  0.125f ));
+	}
 
 	/**
 	 * Default and only constructor for a pool ball
-	 * @param clr Colour of this ball
-	 * @param points Points this ball is worth if scored
+	 * @param type The type of Snooker pool ball. Use the enum {@link Type}
 	 * @param x x-right position of this ball to spawn and rest at
 	 * @param z z-forward position of this ball to spawn and rest at
 	 */
-	public PoolBall (Color3f clr, int points, double x, double z) {
+	public PoolBall (Type type, double x, double z) {
+		this.pointValue = type.pointValue;
+		this.clr = type.colour;
 		this.t = new Transform3D();
 		this.pos = new Vector3d(x, height, z);
 		this.t.setTranslation(this.pos);
@@ -46,8 +75,6 @@ public abstract class PoolBall {
 			128, // Fidelity of sphere, number of polygons
 			createBallAppearance(clr)
 		));
-		this.clr = clr;
-		this.pointValue = points;
 	}
 	
 	/**

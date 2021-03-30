@@ -8,7 +8,7 @@ import org.jogamp.vecmath.Vector3d;
 
 import jpanels.BasicView;
 import lights.LightFactory;
-import objects.poolballs.*;
+import objects.PoolBall.Type;
 
 public class PoolBallViewer extends BasicView {
 	private static final long serialVersionUID = 1L;
@@ -28,14 +28,14 @@ public class PoolBallViewer extends BasicView {
 		bg.addChild(LightFactory.createAmbientLight());
 		bg.addChild(LightFactory.createPointLight(new Point3f(0.1f, 3, 0.1f)));
 				
-		bg.addChild(new RedBall(0, 0).getTG());
-		bg.addChild(new YellowBall(0.5, 0).getTG());
-		bg.addChild(new GreenBall(0, 0.5).getTG());
-		bg.addChild(new BrownBall(0.5, 0.5).getTG());
-		bg.addChild(new BlueBall(-0.5, 0).getTG());
-		bg.addChild(new PinkBall(0, -0.5).getTG());
-		bg.addChild(new BlackBall(-0.5, -0.5).getTG());
-		bg.addChild(new CueBall(-0.5, 0.5).getTG());
+		bg.addChild(new PoolBall(Type.RED, 0, 0).getTG());
+		bg.addChild(new PoolBall(Type.YELLOW, 0.5, 0).getTG());
+		bg.addChild(new PoolBall(Type.GREEN, 0, 0.5).getTG());
+		bg.addChild(new PoolBall(Type.BROWN, 0.5, 0.5).getTG());
+		bg.addChild(new PoolBall(Type.BLUE, -0.5, 0).getTG());
+		bg.addChild(new PoolBall(Type.PINK, 0, -0.5).getTG());
+		bg.addChild(new PoolBall(Type.BLACK, -0.5, -0.5).getTG());
+		bg.addChild(new PoolBall(Type.CUE, -0.5, 0.5).getTG());
 
 		bg.compile();
 		return bg;
