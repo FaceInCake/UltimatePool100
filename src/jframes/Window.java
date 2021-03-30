@@ -6,9 +6,12 @@ import javax.swing.JPanel;
 /**
  * Default window.
  * Contains a title and whatever JPanel you put inside it.
+ * @implNote
  * Your main function should create a Runnable which just creates
- * a new one of these. Then in this class'es constructor would you pass the JPanel,
+ * a new one of these. Then in this class's constructor would you pass the source,
  * and optionally a title, or dimensions.
+ * For the source, pass a JPanel containing all the essentials. The BasicView class should do.
+ * @see BasicView
  */
 public class Window extends JFrame {
 	private static final long serialVersionUID = 1L;

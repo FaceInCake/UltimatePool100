@@ -30,22 +30,38 @@ public class FreeCamController extends Behavior
 implements
 java.awt.event.KeyListener,
 java.awt.event.MouseMotionListener,
-java.awt.event.MouseListener {
-	private static double movSpeed = 2.0; // Units per seconds
-	private static double angSpeed = 2.0; // Radians per second
+java.awt.event.MouseListener
+{
+	/** Units per second speed of the camera when translating */
+	private static double movSpeed = 2.0;
+	/** To run the behaviour on every frame */
 	private static WakeupCriterion wakecon = new WakeupOnElapsedFrames(0);
+	/** PI divided by two, save that math */
 	private static double PI_2 = Math.PI/2.0;
+	/** The target TransformGroup, should be the ViewTransform */
 	private TransformGroup targetTG;
+	/** The target Transform3D, should be the ViewTransform's transform */
 	private Transform3D targetT;
+	/** The set of all keys currently held down */
 	private HashSet<Integer> keys;
+	/** Unit vectors for the directions of the camera */
 	private Vector3d forward, right, up;
+	/** Current yaw rotation of the camera */
 	private double viewYaw;
+	/** Current pitch rotation of the camera */
 	private double viewPitch;
+	/** Current position and therefore translation of the camera, in global worldspace */
 	private Vector3d viewPos;
-	private int lastMX; // Last mouse x pos, used when mouse dragging
-	private int lastMY; // Last mouse y pos, used when mouse dragging
+	/** x position of mouse last frame, used when mouse dragging */
+	private int lastMX;
+	/** y position of mouse last frame, used when mouse dragging */
+	private int lastMY;
 
-
+	/**
+	 * The one and only constructor, pass in the BasicView
+	 * or some other subclass for it to control.
+	 * @param view The BasicView for which to control
+	 */
 	public FreeCamController (BasicView view) {
 		super();
 		this.keys = new HashSet<>(4);
@@ -73,11 +89,40 @@ java.awt.event.MouseListener {
 
 	}
 	
+	/**
+	 * Gets the current position of the camera
+	 * @return The current position of the camera
+	 */
 	public Vector3d getPos () {return this.viewPos;}
+	
+	/**
+	 * Gets the current yaw rotation of the camera
+	 * @return The current yaw rotation of the camera in radians
+	 */
 	public double getYaw () {return this.viewYaw;}
+	
+	/**
+	 * Gets the current pitch rotation of the camera
+	 * @return The current pitch rotation of the camera in radians
+	 */
 	public double getPitch () {return this.viewPitch;}
+	
+	/**
+	 * Gets the forward direction of the camera
+	 * @return Forward facing unit vector 
+	 */
 	public Vector3d getForward () {return this.forward;}
+	
+	/**
+	 * Gets the upwards direction of the camera
+	 * @return Up facing unit vector
+	 */
 	public Vector3d getUp () {return this.up;}
+	
+	/**
+	 * Gets the rightwards direction of the camera
+	 * @return Right facing unit vector
+	 */
 	public Vector3d getRight () {return this.right;}
 
 	@Override
@@ -85,6 +130,9 @@ java.awt.event.MouseListener {
 		super.wakeupOn(wakecon);
 	}
 	
+	/**
+	 * Updates the ViewTransform to the current position and angle
+	 */
 	private void updateTargetTG () {
 		Matrix3d m1=new Matrix3d(), m2=new Matrix3d();
 		m1.rotY(viewYaw); m2.rotX(viewPitch); m1.mul(m2);
@@ -93,6 +141,9 @@ java.awt.event.MouseListener {
 		targetTG.setTransform(targetT);
 	}
 	
+	/**
+	 * Updates the unit vector directions to the current angles
+	 */
 	private void updateDirs () {
 		forward.set(-Math.sin(viewYaw)*Math.cos(viewPitch), -Math.sin(-viewPitch), -Math.cos(viewYaw)*Math.cos(viewPitch));
 		right.set(Math.cos(-viewYaw), 0, Math.sin(-viewYaw));
@@ -129,7 +180,10 @@ java.awt.event.MouseListener {
 
 	@Override
 	public void keyTyped(java.awt.event.KeyEvent arg0) {}
-
+	
+	/**
+	 * Rotates the camera based on where the mouse was dragged
+	 */
 	@Override
 	public void mouseDragged(java.awt.event.MouseEvent arg0) {
 		int difX = this.lastMX - arg0.getX();
@@ -154,6 +208,10 @@ java.awt.event.MouseListener {
 	@Override
 	public void mouseExited(MouseEvent arg0) {}
 
+	/**
+	 * Set the last known mouse positition to where
+	 * the mouse it at, to start the mouse dragging prodecure.
+	 */
 	@Override
 	public void mousePressed(MouseEvent arg0) {
 		this.lastMX = arg0.getX();

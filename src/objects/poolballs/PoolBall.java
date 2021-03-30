@@ -13,7 +13,6 @@ import org.jogamp.vecmath.Vector3d;
  * Subclass this, calling the super constructor and
  * filling in the appropriate values (colour and point value)
  * @author Matthew Eppel
- * @version 1.0.0
  */
 public abstract class PoolBall {
 	/** The Y-up value that all balls spawn and rest at */

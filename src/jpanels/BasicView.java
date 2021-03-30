@@ -15,51 +15,47 @@ import org.jogamp.java3d.TransformGroup;
 import org.jogamp.java3d.utils.universe.SimpleUniverse;
 
 /**
- * Abstract class that extends the JPanel
- * Basically the screen of window.
- * Creates a Canvas3D and SimpleUniverse.
- * Pass this into a JFrame to use it. Look through the jpanels package.
+ * Abstract class that extends the JPanel.
+ * Basically the JPanel is a container for everything
+ * we want to place into the window. Inside the JFrame.
+ * This class creates a Canvas3D, a SimpleUniverse, and a content branch.
+ * @implNote
+ * Subclass this, overriding the createContent() method and
+ * adding whatever else you want. Then,
+ * pass this into a Window constructor to use it. Look through the jpanels package.
  */
 public abstract class BasicView extends JPanel {
 	private static final long serialVersionUID = 1L;
 	
 	/**
-	 * Contains stuff for rendering the
-	 * environment to the JPanel.
+	 * Whenever we draw to the screen, this is what it draws to
+	 * Basically this contains a BUNCH of fancy rendering info and stuff
 	 */
 	private Canvas3D screen;
 	
 	/**
-	 * Contains stuff for viewing the
-	 * the environment from a POV.
+	 * Creates our ViewingPlatform and Viewer object
+	 * AKA creates our camera that we can look through
+	 * Believe it or not, it's simple. Really crazy programs might not use this.
+	 * We're not writing a crazy program, one camera is all we want.
 	 */
 	private SimpleUniverse su;
 	
-	/** The width in pixels of the screen, not the window */
-	private int width;
-	/** The height in pixels of the screen, not the window */
-	private int height;
-
 	/**
-	 * Default constructor
-	 * Just make sure to override the getContent
+	 * Default constructor.
+	 * Check the implementation note of this class.
+	 * @see BasicView
 	 */
 	public BasicView() {
 		// All the settings the Canvas3D needs to make a rendering context
 		GraphicsConfiguration config = SimpleUniverse.getPreferredConfiguration();
-		// Whenever we draw to the screen, this is what it draws to
-		// Basically this contains a BUNCH of fancy rendering info and stuff
 		this.screen = new Canvas3D(config);
-		// Creates our ViewingPlatform and Viewer object
-		// AKA creates our camera that we can look through
-		// Believe it or not, it's simple. Really crazy programs might not use this.
-		// We're not writing a crazy program, one camera for every user is all we want
 		this.su = new SimpleUniverse(this.screen);
 		// Add the BranchGroup content
 		this.su.addBranchGraph(this.createContent());
 		// Makes sure the screen takes up the entire window
 		super.setLayout(new BorderLayout());
-		super.add("Center", this.screen);		
+		super.add("Center", this.screen);
 	}
 	
 	/**
@@ -122,8 +118,9 @@ public abstract class BasicView extends JPanel {
 	}
 	
 	/**
-	 * Override this function with the function that creates the main content
-	 * BranchGroup and returns it
+	 * Override this method with the method that creates the main content
+	 * BranchGroup and returns it.
+	 * @implNote This gets called before your subclass's contructor does
 	 * @return BranchGroup The main content
 	 */
 	public abstract BranchGroup createContent ();
