@@ -46,13 +46,21 @@ public class PoolBall {
 			this.colour = c;
 		}
 		
+		/** Not worth any points when scored and coloured white */
 		public static Type CUE    = new Type(0, new Color3f(0.875f, 0.875f,  0.75f  ));
+		/** There's sixteen of these balls, worth 1 point each */
 		public static Type RED    = new Type(1, new Color3f(0.875f, 0.0625f, 0.0625f));
+		/** There's one yellow ball worth 2 points */
 		public static Type YELLOW = new Type(2, new Color3f(0.75f,  0.75f,   0.125f ));
+		/** There's one green ball worth 3 points */
 		public static Type GREEN  = new Type(3, new Color3f(0.125f, 0.5f,    0.125f ));
+		/** There's one brown ball worth 4 points */
 		public static Type BROWN  = new Type(4, new Color3f(0.375f, 0.1875f, 0.0625f));
+		/** There's one blue ball worth 5 points */
 		public static Type BLUE   = new Type(5, new Color3f(0.125f, 0.125f,  0.875f ));
+		/** There's one pink ball worth 6 points */
 		public static Type PINK   = new Type(6, new Color3f(0.875f, 0.375f,  0.625f ));
+		/** There's one black ball worth 7 points */
 		public static Type BLACK  = new Type(7, new Color3f(0.125f, 0.125f,  0.125f ));
 	}
 
@@ -96,8 +104,9 @@ public class PoolBall {
 	}
 	
 	/**
-	 * Returns the tg for this ball
-	 * @return TransformGroup that this ball is in
+	 * Getter for the transform group that is created
+	 * with the ball and contains the ball.
+	 * @return The TransformGroup that contains this ball
 	 */
 	public TransformGroup getTG () {
 		return this.tg;

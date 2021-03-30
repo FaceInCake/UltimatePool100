@@ -19,10 +19,12 @@ import jpanels.BasicView;
 /**
  * Allows the moving and rotating of a ViewTransform, AKA a camera.
  * <h3> Controls </h3>
+ * <ul>
  * <li> Use W and S to move forward and back
  * <li> Use A and D to move left and right
  * <li> Use Space and Shift to move up and down
  * <li> Drag the mouse to rotate the camera
+ * </ul>
  * <h3> Implementing </h3>
  * Create this object, passing in the BasicView object. <br>
  * Then add this to the content branch. <br>

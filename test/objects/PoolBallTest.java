@@ -34,7 +34,6 @@ public class PoolBallTest extends BasicView {
 		FreeCamController fcc;
 		fcc = new FreeCamController(this);
 		content.addChild(fcc);
-
 		
 		content.addChild(new PoolBall(Type.BLUE, 0, 0).getTG());
 		

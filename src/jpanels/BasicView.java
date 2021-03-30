@@ -122,9 +122,9 @@ public abstract class BasicView extends JPanel {
 	
 	/**
 	 * Override this method with the method that creates the main content
-	 * BranchGroup and returns it.
-	 * @implNote This gets called before your subclass's contructor does
-	 * @return BranchGroup The main content
+	 * BranchGroup and returns it. <br>
+	 * <b>Note: </b> This gets called before your subclass's contructor does.
+	 * @return The BranchGroup containing the main scene content
 	 */
 	public abstract BranchGroup createContent ();
 

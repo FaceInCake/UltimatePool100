@@ -14,6 +14,7 @@ import org.jogamp.vecmath.Point3f;
  * Just remember to add them to the branchgroup.
  */
 public class LightFactory {
+	/** Overly large bounding sphere for all lights to use */
 	private static BoundingSphere bounds = new BoundingSphere(new Point3d(), 100);
 
 	/**
@@ -39,7 +40,6 @@ public class LightFactory {
 	 * Creates a new point light with the given paramaters.
 	 * The colour is defaulted to full white.
 	 * The attenuation is defaulted to constant.
-	 * @implNote Remember to add this to the content branch
 	 * @param pos The position of the point light
 	 * @return The newly created point light
 	 */
@@ -50,7 +50,6 @@ public class LightFactory {
 	/**
 	 * Creates a new point light with the given paramaters.
 	 * The attenuation is defaulted to constant.
-	 * @implNote Remember to add this to the content branch
 	 * @param pos The position of the point light
 	 * @param clr The colour of the point light
 	 * @return The newly created point light
@@ -62,7 +61,6 @@ public class LightFactory {
 	/**
 	 * Creates a new point light with the given paramaters.
 	 * Colour is defaulted to full white.
-	 * @implNote Remember to add this to the content branch
 	 * @param pos The position of the point light
 	 * @param atten The attenuation of the point light (constant, linear, quadratic)
 	 * @return The newly created point light
@@ -73,10 +71,9 @@ public class LightFactory {
 	
 	/**
 	 * Creates a new point light with the given paramaters.
-	 * @implNote Remember to add this to the content branch
 	 * @param pos The position of the point light
 	 * @param clr The colour of the point light
-	 * @param atten The attenuation of the point light (constant, linear, quadratic)
+	 * @param atten The attenuation of the point light Point3f(constant, linear, quadratic)
 	 * @return The newly created point light
 	 */
 	public static PointLight createPointLight (Point3f pos, Color3f clr, Point3f atten) {
