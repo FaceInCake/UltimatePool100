@@ -31,8 +31,7 @@ public class PoolBallTest extends BasicView {
 		t.lookAt(new Point3d(2,2,2), new Point3d(), new Vector3d(0,1,0));
 		t.invert();
 		setViewTransform(t);
-		FreeCamController fcc;
-		fcc = new FreeCamController(this);
+		FreeCamController fcc = new FreeCamController(this);
 		content.addChild(fcc);
 		
 		content.addChild(new PoolBall(Type.BLUE, 0, 0).getTG());
