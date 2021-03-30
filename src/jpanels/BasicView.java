@@ -16,12 +16,13 @@ import org.jogamp.java3d.utils.universe.SimpleUniverse;
 
 /**
  * Abstract class that extends the JPanel.
+ * <p>
  * Basically the JPanel is a container for everything
- * we want to place into the window. Inside the JFrame.
+ * we want to place into the window. Inside the JFrame. <br>
  * This class creates a Canvas3D, a SimpleUniverse, and a content branch.
- * @implNote
+ * <h3> Implementing </h3>
  * Subclass this, overriding the createContent() method and
- * adding whatever else you want. Then,
+ * adding whatever else you want. <br> Then,
  * pass this into a Window constructor to use it. Look through the jpanels package.
  */
 public abstract class BasicView extends JPanel {
@@ -61,6 +62,7 @@ public abstract class BasicView extends JPanel {
 	/**
 	 * Returns the width of the screen,
 	 * in pixels.
+	 * @return Width of screen in pixels
 	 */
 	public int getScreenWidth () {
 		return this.getCanvas().getWidth();
@@ -69,6 +71,7 @@ public abstract class BasicView extends JPanel {
 	/**
 	 * Returns the height of the screen,
 	 * in pixels.
+	 * @return Height of screen in pixels
 	 */
 	public int getScreenHeight () {
 		return this.getCanvas().getHeight();

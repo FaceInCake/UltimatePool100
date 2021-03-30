@@ -11,9 +11,8 @@ import org.jogamp.vecmath.Point3f;
 /**
  * An axis frame is a 3D shape.
  * Three arms poke out from the origin along each
- * axis, from 0.0 -> +1.0.
+ * axis, from 0.0 to +1.0.
  * Red, green, blue represents the x, y, z axis
- * @author Matthew Eppel
  */
 public class AxisFrame extends Shape3D {
 

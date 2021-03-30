@@ -9,7 +9,8 @@ import org.jogamp.vecmath.Point3f;
 
 /**
  * Factory class for creating Lights.
- * Contains a bunch of overloaded static methods that create Lights.
+ * <p>
+ * Contains a bunch of overloaded static methods that create Lights. <br>
  * Just remember to add them to the branchgroup.
  */
 public class LightFactory {

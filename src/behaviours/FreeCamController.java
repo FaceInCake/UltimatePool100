@@ -18,12 +18,14 @@ import jpanels.BasicView;
 
 /**
  * Allows the moving and rotating of a ViewTransform, AKA a camera.
- * > Use W & S to move forward and back
- * > Use A & D to move left and right
- * > Use Space & Shift to move up and down
- * > Drag the mouse to rotate the camera
- * @implNote Create this object, passing in the BasicView object.
- * Then add this to the content branch.
+ * <h3> Controls </h3>
+ * <li> Use W and S to move forward and back
+ * <li> Use A and D to move left and right
+ * <li> Use Space and Shift to move up and down
+ * <li> Drag the mouse to rotate the camera
+ * <h3> Implementing </h3>
+ * Create this object, passing in the BasicView object. <br>
+ * Then add this to the content branch. <br>
  * It will add itself to the KeyListener and MouseListener list.
  */
 public class FreeCamController extends Behavior
@@ -181,9 +183,6 @@ java.awt.event.MouseListener
 	@Override
 	public void keyTyped(java.awt.event.KeyEvent arg0) {}
 	
-	/**
-	 * Rotates the camera based on where the mouse was dragged
-	 */
 	@Override
 	public void mouseDragged(java.awt.event.MouseEvent arg0) {
 		int difX = this.lastMX - arg0.getX();
@@ -208,10 +207,6 @@ java.awt.event.MouseListener
 	@Override
 	public void mouseExited(MouseEvent arg0) {}
 
-	/**
-	 * Set the last known mouse positition to where
-	 * the mouse it at, to start the mouse dragging prodecure.
-	 */
 	@Override
 	public void mousePressed(MouseEvent arg0) {
 		this.lastMX = arg0.getX();
