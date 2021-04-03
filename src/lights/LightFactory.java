@@ -18,11 +18,20 @@ public class LightFactory {
 	private static BoundingSphere bounds = new BoundingSphere(new Point3d(), 100);
 
 	/**
-	 * Creates an ambient light of massive boundary and dark colour
-	 * @return The newly created AmbientLight
+	 * Creates an ambient white light of brightness 0.2.
+	 * @return The newly created ambient light
 	 */
 	public static AmbientLight createAmbientLight () {
-		return createAmbientLight(new Color3f(0.2f, 0.2f, 0.2f));
+		return createAmbientLight(0.2f);
+	}
+	
+	/**
+	 * Creates an ambient white light of the given brightness
+	 * @param brightness 0.0 to 1.0 brightness of the ambient light
+	 * @return The newly created AmbientLight
+	 */
+	public static AmbientLight createAmbientLight (float brightness) {
+		return createAmbientLight(new Color3f(brightness, brightness, brightness));
 	}
 	
 	/**
