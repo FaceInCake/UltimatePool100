@@ -9,27 +9,27 @@
 	</classpathentry>
 	<classpathentry kind="lib" path="lib/j3dexamples.jar">
 		<attributes>
-			<attribute name="javadoc_location" value="https://jogamp.org/deployment/java3d/1.7.0-final/javadoc/"/>
+			<attribute name="javadoc_location" value="https://docs.oracle.com/cd/E17802_01/j2se/javase/technologies/desktop/java3d/forDevelopers/J3D_1_3_API/j3dapi/"/>
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="lib" path="lib/j3dutils.jar">
 		<attributes>
-			<attribute name="javadoc_location" value="https://jogamp.org/deployment/java3d/1.7.0-final/javadoc/"/>
+			<attribute name="javadoc_location" value="https://docs.oracle.com/cd/E17802_01/j2se/javase/technologies/desktop/java3d/forDevelopers/J3D_1_3_API/j3dapi/"/>
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="lib" path="lib/jogamp-fat.jar">
 		<attributes>
-			<attribute name="javadoc_location" value="https://jogamp.org/deployment/java3d/1.7.0-final/javadoc/"/>
+			<attribute name="javadoc_location" value="https://docs.oracle.com/cd/E17802_01/j2se/javase/technologies/desktop/java3d/forDevelopers/J3D_1_3_API/j3dapi/"/>
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="lib" path="lib/vecmath.jar">
 		<attributes>
-			<attribute name="javadoc_location" value="https://jogamp.org/deployment/java3d/1.7.0-final/javadoc/"/>
+			<attribute name="javadoc_location" value="https://docs.oracle.com/cd/E17802_01/j2se/javase/technologies/desktop/java3d/forDevelopers/J3D_1_3_API/j3dapi/"/>
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="lib" path="lib/j3dcore.jar">
 		<attributes>
-			<attribute name="javadoc_location" value="https://jogamp.org/deployment/java3d/1.7.0-final/javadoc/"/>
+			<attribute name="javadoc_location" value="https://docs.oracle.com/cd/E17802_01/j2se/javase/technologies/desktop/java3d/forDevelopers/J3D_1_3_API/j3dapi/"/>
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="output" path="bin"/>
