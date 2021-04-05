@@ -6,6 +6,13 @@
     "configurations": [
         {
             "type": "java",
+            "name": "Launch ScoreboardTester",
+            "request": "launch",
+            "mainClass": "objects.ScoreboardTester",
+            "projectName": "UltimatePool100"
+        },
+        {
+            "type": "java",
             "name": "Launch RoomLightingTester",
             "request": "launch",
             "mainClass": "objects.RoomLightingTester",
