@@ -1,1 +1,0 @@
-typeSearchIndex = [{"l":"All Classes","url":"allclasses-index.html"},{"p":"objects","l":"AxisFrame"},{"p":"jpanels","l":"BasicView"},{"p":"behaviours","l":"FreeCamController"},{"p":"lights","l":"LightFactory"},{"p":"objects","l":"PoolBall"},{"p":"objects","l":"PoolBall.Type"},{"p":"jframes","l":"Window"}]
