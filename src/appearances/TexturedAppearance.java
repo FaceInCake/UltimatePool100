@@ -3,7 +3,6 @@ package appearances;
 import org.jogamp.java3d.Appearance;
 import org.jogamp.java3d.ImageComponent2D;
 import org.jogamp.java3d.Material;
-import org.jogamp.java3d.TexCoordGeneration;
 import org.jogamp.java3d.Texture;
 import org.jogamp.java3d.Texture2D;
 import org.jogamp.java3d.TextureAttributes;
