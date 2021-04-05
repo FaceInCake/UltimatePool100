@@ -80,7 +80,7 @@ public class PoolBall {
 		this.tg.addChild(new Sphere(
 			0.1f, // Radius of the ball
 			Sphere.GENERATE_NORMALS, // Capability flags
-			128, // Fidelity of sphere, number of polygons
+			256, // Fidelity of sphere, number of polygons
 			createBallAppearance(clr)
 		));
 	}
