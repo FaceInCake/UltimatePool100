@@ -4,9 +4,11 @@ import org.jogamp.java3d.Appearance;
 import org.jogamp.java3d.QuadArray;
 import org.jogamp.java3d.Shape3D;
 import org.jogamp.java3d.TransformGroup;
+import org.jogamp.vecmath.Color3f;
 import org.jogamp.vecmath.Point3f;
 import org.jogamp.vecmath.Vector3f;
 
+import appearances.MaterialFactory;
 import appearances.TexturedAppearance;
 
 public class SimpleRoom extends TransformGroup {
@@ -22,6 +24,7 @@ public class SimpleRoom extends TransformGroup {
 			square.setTextureCoordinate(0, i, uvs[i]);
 		}
 		Appearance app = new TexturedAppearance(filename, 0.0001f, 0.5f);
+        app.setMaterial(MaterialFactory.createMaterial(new Color3f(1, 0, 0)));
 		return new Shape3D(square, app);
 	}
 	
