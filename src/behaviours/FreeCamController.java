@@ -37,25 +37,25 @@ java.awt.event.MouseMotionListener,
 java.awt.event.MouseListener
 {
 	/** Units per second speed of the camera when translating */
-	private static double movSpeed = 2.0;
+	public static final double movSpeed = 2.0;
 	/** To run the behaviour on every frame */
 	private static WakeupCriterion wakecon = new WakeupOnElapsedFrames(0);
 	/** PI divided by two, save that math */
 	private static double PI_2 = Math.PI/2.0;
 	/** The target TransformGroup, should be the ViewTransform */
-	private TransformGroup targetTG;
+	protected TransformGroup targetTG;
 	/** The target Transform3D, should be the ViewTransform's transform */
-	private Transform3D targetT;
+	protected Transform3D targetT;
 	/** The set of all keys currently held down */
-	private HashSet<Integer> keys;
+	protected HashSet<Integer> keys;
 	/** Unit vectors for the directions of the camera */
-	private Vector3d forward, right, up;
+	protected Vector3d forward, right, up;
 	/** Current yaw rotation of the camera */
-	private double viewYaw;
+	protected double viewYaw;
 	/** Current pitch rotation of the camera */
-	private double viewPitch;
+	protected double viewPitch;
 	/** Current position and therefore translation of the camera, in global worldspace */
-	private Vector3d viewPos;
+	protected Vector3d viewPos;
 	/** x position of mouse last frame, used when mouse dragging */
 	private int lastMX;
 	/** y position of mouse last frame, used when mouse dragging */
@@ -80,9 +80,9 @@ java.awt.event.MouseListener
 		this.targetT.get(q, this.viewPos);
 		this.viewYaw = Math.atan2(2*q.y*q.w-2*q.x*q.z , 1 - 2*q.y*q.y - 2*q.z*q.z);
 		this.viewPitch = -Math.asin(2.0 * (q.w*q.y + q.x*q.z));
-		this.forward = new Vector3d();
-		this.right = new Vector3d();
-		this.up = new Vector3d();
+		this.forward = new Vector3d(0, 0, 1);
+		this.right = new Vector3d(1, 0, 0);
+		this.up = new Vector3d(0, 1, 0);
 		this.lastMX = 0;
 		this.lastMY = 0;
 		updateDirs();
@@ -137,7 +137,7 @@ java.awt.event.MouseListener
 	/**
 	 * Updates the ViewTransform to the current position and angle
 	 */
-	private void updateTargetTG () {
+	protected void updateTargetTG () {
 		Matrix3d m1=new Matrix3d(), m2=new Matrix3d();
 		m1.rotY(viewYaw); m2.rotX(viewPitch); m1.mul(m2);
 		targetT.setRotation(m1);
@@ -148,7 +148,7 @@ java.awt.event.MouseListener
 	/**
 	 * Updates the unit vector directions to the current angles
 	 */
-	private void updateDirs () {
+	protected void updateDirs () {
 		forward.set(-Math.sin(viewYaw)*Math.cos(viewPitch), -Math.sin(-viewPitch), -Math.cos(viewYaw)*Math.cos(viewPitch));
 		right.set(Math.cos(-viewYaw), 0, Math.sin(-viewYaw));
 		up.cross(right, forward);
@@ -159,7 +159,13 @@ java.awt.event.MouseListener
 	 */
 	@Override
 	public void processStimulus(Iterator<WakeupCriterion> arg0) {
-		// Time difference in seconds
+		handleKeyInput(); // Change vectors
+		updateTargetTG(); // Apply changes
+		super.wakeupOn(wakecon);
+	}
+
+    protected void handleKeyInput () {
+        // Time difference in seconds
 		double dt = 0.016;
 		// Check movement
 		if (keys.contains(KeyEvent.VK_W)) viewPos.scaleAdd(+movSpeed*dt, forward, viewPos);
@@ -168,9 +174,7 @@ java.awt.event.MouseListener
 		if (keys.contains(KeyEvent.VK_S)) viewPos.scaleAdd(-movSpeed*dt, forward, viewPos);
 		if (keys.contains(KeyEvent.VK_SPACE)) viewPos.scaleAdd(+movSpeed*dt, up, viewPos);
 		if (keys.contains(KeyEvent.VK_SHIFT)) viewPos.scaleAdd(-movSpeed*dt, up, viewPos);
-		updateTargetTG(); // Apply changes
-		super.wakeupOn(wakecon);
-	}
+    }
 
 	@Override
 	public void keyPressed(java.awt.event.KeyEvent arg0) {
