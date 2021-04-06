@@ -7,7 +7,6 @@ import org.jogamp.java3d.BoundingSphere;
 import org.jogamp.java3d.ColoringAttributes;
 import org.jogamp.java3d.Font3D;
 import org.jogamp.java3d.FontExtrusion;
-import org.jogamp.java3d.Material;
 import org.jogamp.java3d.QuadArray;
 import org.jogamp.java3d.RotationInterpolator;
 import org.jogamp.java3d.Shape3D;
