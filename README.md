@@ -2,6 +2,7 @@
 This is a simple multi-user Java3D program. <br>
 You should be able to interact with a pool table and scoreboard. <br>
 It is written entirely in Java and only uses Java3D and consequently Swing. <br>
+Documentation for the source code can be found [here](https://faceincake.github.io/UltimatePool100/).
 
 ## Project Structure
 
@@ -13,9 +14,9 @@ Packages and classes and the like.
 We don't plan to make a deployment process and make any release builds. <br>
 But it's always good habit to make a test folder for any Java files that test your code.
 
-### doc
+### docs
 Contains the source code documentation. <br>
-Simply double click on `doc/index.html`.
+Here's the [Documentation](https://faceincake.github.io/UltimatePool100/).
 
 ### assets
 Contains any files that are read by the program. <br>
@@ -36,5 +37,5 @@ An Agile development process gives the following priorities... <br>
 
 For more info on the exact code structure. <br>
 Check out the source code JavaDoc documentation. <br>
-Contained within `doc/index.html`.
+Contained [here](https://faceincake.github.io/UltimatePool100/).
 
