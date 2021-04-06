@@ -91,6 +91,7 @@ public class PoolBallManager extends Behavior {
     /**
      * Adds multiple pool balls in a equilateral pyramid shape at the given coord. <br>
      * It will always grow the pyramid towards -z.
+     * @param index The index to start from
      * @param layers The number of layers in the pyramid
      * @param type The type of pool ball to spawn
      * @param x The x-coord of the first pool ball, at the top of the pyramid
@@ -107,10 +108,19 @@ public class PoolBallManager extends Behavior {
         }
     }
     
-    /** Shortcut function for adding pool balls for the constructor */
+    /** 
+     * 
+    */
+    /**
+     * Shortcut function for adding pool balls for the constructor
+     * @param i Index to add to
+     * @param type {@link PoolBall.Type} of pool ball to add
+     * @param x x position to set to
+     * @param z y position to set to
+     */
     private void addBall (int i, Type type, double x, double z) {
         this.poolballs[i] = new PoolBall(type, x, z);
-        this.tg.addChild(this.poolballs[i].getTG());
+        this.tg.addChild(this.poolballs[i]);
     }
 
     @Override

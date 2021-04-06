@@ -37,7 +37,7 @@ public class RoomLightingTester extends BasicView {
 		
 		content.addChild(new SimpleRoom(2.0f));
 		
-		content.addChild(new PoolBall(Type.BLUE, 0, 0).getTG());
+		content.addChild(new PoolBall(Type.BLUE, 0, 0));
 		
 		content.compile();
 		return content;

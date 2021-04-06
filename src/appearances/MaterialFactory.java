@@ -3,7 +3,7 @@ package appearances;
 import org.jogamp.java3d.Material;
 import org.jogamp.vecmath.Color3f;
 
-public class MaterialFactory {
+public class MaterialFactory extends Material {
 
 	private MaterialFactory() {}
 	

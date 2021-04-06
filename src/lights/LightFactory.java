@@ -2,6 +2,7 @@ package lights;
 
 import org.jogamp.java3d.AmbientLight;
 import org.jogamp.java3d.BoundingSphere;
+import org.jogamp.java3d.Light;
 import org.jogamp.java3d.PointLight;
 import org.jogamp.vecmath.Color3f;
 import org.jogamp.vecmath.Point3d;
@@ -13,9 +14,12 @@ import org.jogamp.vecmath.Point3f;
  * Contains a bunch of overloaded static methods that create Lights. <br>
  * Just remember to add them to the branchgroup.
  */
-public class LightFactory {
+public class LightFactory extends Light {
 	/** Overly large bounding sphere for all lights to use */
 	private static BoundingSphere bounds = new BoundingSphere(new Point3d(), 100);
+
+    /** Private constructor, as class is a factory */
+    private LightFactory () {}
 
 	/**
 	 * Creates an ambient white light of brightness 0.2.

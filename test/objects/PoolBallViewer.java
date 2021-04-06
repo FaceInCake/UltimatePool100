@@ -28,14 +28,14 @@ public class PoolBallViewer extends BasicView {
 		bg.addChild(LightFactory.createAmbientLight());
 		bg.addChild(LightFactory.createPointLight(new Point3f(0.1f, 3, 0.1f)));
 				
-		bg.addChild(new PoolBall(Type.RED, 0, 0).getTG());
-		bg.addChild(new PoolBall(Type.YELLOW, 0.5, 0).getTG());
-		bg.addChild(new PoolBall(Type.GREEN, 0, 0.5).getTG());
-		bg.addChild(new PoolBall(Type.BROWN, 0.5, 0.5).getTG());
-		bg.addChild(new PoolBall(Type.BLUE, -0.5, 0).getTG());
-		bg.addChild(new PoolBall(Type.PINK, 0, -0.5).getTG());
-		bg.addChild(new PoolBall(Type.BLACK, -0.5, -0.5).getTG());
-		bg.addChild(new PoolBall(Type.CUE, -0.5, 0.5).getTG());
+		bg.addChild(new PoolBall(Type.RED, 0, 0));
+		bg.addChild(new PoolBall(Type.YELLOW, 0.5, 0));
+		bg.addChild(new PoolBall(Type.GREEN, 0, 0.5));
+		bg.addChild(new PoolBall(Type.BROWN, 0.5, 0.5));
+		bg.addChild(new PoolBall(Type.BLUE, -0.5, 0));
+		bg.addChild(new PoolBall(Type.PINK, 0, -0.5));
+		bg.addChild(new PoolBall(Type.BLACK, -0.5, -0.5));
+		bg.addChild(new PoolBall(Type.CUE, -0.5, 0.5));
 
 		bg.compile();
 		return bg;

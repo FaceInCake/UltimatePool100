@@ -13,7 +13,7 @@ import org.jogamp.vecmath.Vector3d;
  * Subclass this, calling the super constructor and
  * filling in the appropriate values (colour and point value)
  */
-public class PoolBall {
+public class PoolBall extends TransformGroup {
     /** The Y-up value that all balls spawn and rest at */
     public static final double height = 0.5;
     /** The radius of each pool ball */
@@ -28,8 +28,6 @@ public class PoolBall {
     public static final double spdLimit = PoolBall.dragCa / PoolBall.dragCo;
     /** Equal to {@link #spdLimit} squared */
     public static final double spdLimit2 = spdLimit * spdLimit;
-    /** The transformgroup that carries the ball's sphere object */
-    private TransformGroup tg;
     /** The transform that translates this ball to it's position */
     private Transform3D t;
     /** Number of points this ball is worth */ 
@@ -58,7 +56,11 @@ public class PoolBall {
         /** Colour of this type of pool ball */
         private Color3f colour;
         
-        /** Private constructor for initializing the enum */
+        /**
+         * Private constructor for initializing the enum
+         * @param p Point value of the pool ball type
+         * @param c Colour of the pool ball type
+         */
         private Type (int p, Color3f c) {
             this.pointValue = p;
             this.colour = c;
@@ -89,6 +91,8 @@ public class PoolBall {
      * @param z z-forward position of this ball to spawn and rest at
      */
     public PoolBall (Type type, double x, double z) {
+        super();
+        super.setCapability(TransformGroup.ALLOW_TRANSFORM_WRITE);
         this.pointValue = type.pointValue;
         this.clr = type.colour;
         this.t = new Transform3D();
@@ -97,8 +101,7 @@ public class PoolBall {
         this.vel = new Vector3d();
         this.inMotion = false;
         this.t.setTranslation(this.pos);
-        this.tg = new TransformGroup(this.t);
-        this.tg.setCapability(TransformGroup.ALLOW_TRANSFORM_WRITE);
+        super.setTransform(this.t);
         Sphere sphere = new Sphere(
             PoolBall.radius, // Radius of the ball
             Sphere.GENERATE_NORMALS, // Capability flags
@@ -106,7 +109,7 @@ public class PoolBall {
             createBallAppearance(clr)
         );
         sphere.setUserData(this);
-        this.tg.addChild(sphere);
+        super.addChild(sphere);
     }
     
     /**
@@ -125,15 +128,6 @@ public class PoolBall {
             128 // Shininess
         ));
         return app;
-    }
-    
-    /**
-     * Getter for the transform group that is created
-     * with the ball and contains the ball.
-     * @return The TransformGroup that contains this ball
-     */
-    public TransformGroup getTG () {
-        return this.tg;
     }
         
     /**
@@ -216,7 +210,7 @@ public class PoolBall {
         this.prevPos.set(this.pos);
         this.pos.set(x, PoolBall.height, z);
         this.t.setTranslation(this.pos);
-        this.tg.setTransform(this.t);
+        super.setTransform(this.t);
     }
 
     /**
@@ -276,7 +270,7 @@ public class PoolBall {
     /**
      * Returns whether this pool ball is in motion, <br>
      * or, has a non-negligible velocity.
-     * @return
+     * @return True if the ball is moving
      */
     public boolean isInMotion () {
         return this.inMotion;
