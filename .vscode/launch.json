@@ -20,6 +20,13 @@
         },
         {
             "type": "java",
+            "name": "Launch PoolBallTest",
+            "request": "launch",
+            "mainClass": "objects.PoolBallTest",
+            "projectName": "UltimatePool100"
+        },
+        {
+            "type": "java",
             "name": "Launch Current File",
             "request": "launch",
             "mainClass": "${file}"
