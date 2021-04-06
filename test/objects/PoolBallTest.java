@@ -98,22 +98,12 @@ public class PoolBallTest extends BasicView implements KeyListener {
 
         // Add the square 'pool table'
         content.addChild(createSquare());
-        content.addChild(createCircle(
-            new Point3d(+PoolBallManager.width_2, PoolBall.height-PoolBall.radius*0.99, +PoolBallManager.length_2),
-            (float) PoolBallManager.pocketRadius
-        ));
-		content.addChild(createCircle(
-            new Point3d(-PoolBallManager.width_2, PoolBall.height-PoolBall.radius*0.99, +PoolBallManager.length_2),
-            (float) PoolBallManager.pocketRadius
-        ));
-		content.addChild(createCircle(
-            new Point3d(-PoolBallManager.width_2, PoolBall.height-PoolBall.radius*0.99, -PoolBallManager.length_2),
-            (float) PoolBallManager.pocketRadius
-        ));
-		content.addChild(createCircle(
-            new Point3d(+PoolBallManager.width_2, PoolBall.height-PoolBall.radius*0.99, -PoolBallManager.length_2),
-            (float) PoolBallManager.pocketRadius
-        ));
+        for (int i=0; i<6; i++) {
+            content.addChild(createCircle(
+                new Point3d(PoolBallManager.pockets[i].x, PoolBall.height, PoolBallManager.pockets[i].y),
+                (float) PoolBallManager.pocketRadius
+            ));
+        }
 		
         // Add the pool ball manager
 		this.pbm = new PoolBallManager();

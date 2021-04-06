@@ -3,12 +3,11 @@ package behaviours;
 import java.util.Iterator;
 import org.jogamp.java3d.Behavior;
 import org.jogamp.java3d.BoundingSphere;
-import org.jogamp.java3d.Transform3D;
 import org.jogamp.java3d.TransformGroup;
 import org.jogamp.java3d.WakeupCriterion;
 import org.jogamp.java3d.WakeupOnElapsedFrames;
 import org.jogamp.vecmath.Point3d;
-import org.jogamp.vecmath.Vector3d;
+import org.jogamp.vecmath.Vector2d;
 
 import objects.PoolBall;
 import objects.PoolBall.Type;
@@ -29,7 +28,14 @@ public class PoolBallManager extends Behavior {
     /** Equal to {@link #length} divided by 2 */
     public static final double length_2 = length / 2.0 ;
     /** Radius of the corner pocket */
-    public static final double pocketRadius = 2 * PoolBall.radius * Math.sqrt(2);
+    public static final double pocketRadius = 4 * PoolBall.radius * Math.sqrt(2);
+    /** The distance between the centre of the side pocket and the side of the pool table */
+    public static final double sideDif = 0;//Math.sqrt(28 * PoolBall.radius2);
+    public static final Vector2d[] pockets = {
+        new Vector2d(-width_2, -length_2), new Vector2d(+width_2, -length_2),
+        new Vector2d(+width_2, +length_2), new Vector2d(-width_2, +length_2),
+        new Vector2d(-width_2-sideDif, 0), new Vector2d(+width_2+sideDif, 0)
+    };
     /** static wake up criterion to run on tick, (every frame) */
     private static WakeupCriterion WC_onTick = new WakeupOnElapsedFrames(0);
     /** Array of all 22 pool balls to iterate over.<br>
@@ -158,15 +164,17 @@ public class PoolBallManager extends Behavior {
      */
     private void checkPocketSink (int index) {
         PoolBall p = this.poolballs[index];
-        double difx = PoolBallManager.width_2 - Math.abs(p.getPosX());
-        double difz = PoolBallManager.length_2 - Math.abs(p.getPosZ());
-        if (difx*difx+difz*difz < PoolBallManager.pocketRadius*PoolBallManager.pocketRadius) {
-            System.out.println("Scored "+p.getPointValue()+" points!");
-            p.stop();
-            p.setPos(4096, 4096);
-            this.poolballs[index] = null;
+        for (int i=0; i<6; i++) { // Lazy check every pocket
+            double difx = pockets[i].getX() - p.getPosX();
+            double difz = pockets[i].getY() - p.getPosZ();
+            if (difx*difx+difz*difz < pocketRadius*pocketRadius) {
+                System.out.println("Scored "+p.getPointValue()+" points!");
+                p.stop();
+                p.setPos(1<<8, 1<<8);
+                this.poolballs[index] = null;
+                break;
+            }
         }
-
     }
 
     /**
@@ -215,8 +223,6 @@ public class PoolBallManager extends Behavior {
         if (a.isInMotion() || b.isInMotion()) {
             double difx = b.getPosX() - a.getPosX() ;
             double difz = b.getPosZ() - a.getPosZ() ;
-            // double difx = (b.getPosX()+b.getVelX()) - (a.getPosX()+a.getVelX()) ;
-            // double difz = (b.getPosZ()+b.getVelZ()) - (a.getPosZ()+a.getVelZ()) ;
             if (difx*difx+difz*difz <= PoolBall.radius2*4) {
                 // Check if they weren't colliding previously
                 // double pdifx = b.getPrevPosX() - a.getPrevPosX() ;
