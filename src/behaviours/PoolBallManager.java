@@ -9,6 +9,7 @@ import org.jogamp.java3d.WakeupOnElapsedFrames;
 import org.jogamp.vecmath.Point3d;
 import org.jogamp.vecmath.Vector2d;
 
+import misc.SoundPlayer;
 import objects.PoolBall;
 import objects.PoolBall.Type;
 
@@ -260,6 +261,9 @@ public class PoolBallManager extends Behavior {
                     double z1final = z1*cos+x1*sin;
                     double x2final = x2*cos-z2*sin;
                     double z2final = z2*cos+x2*sin;
+
+                    // Play collision sound
+                    SoundPlayer.playPoolBallColl();
                     
                     // finally compute the new absolute positions
                     a.setPos(
