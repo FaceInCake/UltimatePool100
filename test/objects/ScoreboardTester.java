@@ -22,7 +22,6 @@ public class ScoreboardTester extends BasicView implements KeyListener {
 	public BranchGroup createContent() {
 		BranchGroup content = new BranchGroup();
 		
-		content.addChild(new AxisFrame());
 		content.addChild(LightFactory.createAmbientLight());
 		content.addChild(LightFactory.createPointLight(new Point3f(0.5f, 1, 0)));
 		
@@ -33,9 +32,10 @@ public class ScoreboardTester extends BasicView implements KeyListener {
 		FreeCamController fcc = new FreeCamController(this);
         content.addChild(fcc);
 		
-        this.sb = new Scoreboard(new Point3d());
-        content.addChild(sb.getTG());
-		
+        content.addChild(new AxisFrame());
+
+		this.sb = new Scoreboard(new Vector3d(1, 1, 1));
+        content.addChild(sb);
         super.getCanvas().addKeyListener(this);
 
 		content.compile();
@@ -57,9 +57,9 @@ public class ScoreboardTester extends BasicView implements KeyListener {
     public void keyReleased(KeyEvent arg0) {
         switch (arg0.getKeyCode()) {
         case KeyEvent.VK_1:
-            this.sb.updateScore(1, 1); break;
+            this.sb.scoreP1(); break;
         case KeyEvent.VK_2:
-            this.sb.updateScore(1, 2); break;
+            this.sb.scoreP2(); break;
         }
         
     }

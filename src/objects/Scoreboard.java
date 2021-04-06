@@ -15,82 +15,157 @@ import org.jogamp.java3d.Text3D;
 import org.jogamp.java3d.Transform3D;
 import org.jogamp.java3d.TransformGroup;
 import org.jogamp.vecmath.Color3f;
-import org.jogamp.vecmath.Matrix4d;
 import org.jogamp.vecmath.Point3d;
 import org.jogamp.vecmath.Point3f;
+import org.jogamp.vecmath.Vector3d;
 import org.jogamp.vecmath.Vector3f;
+
+import appearances.MaterialFactory;
 import appearances.TexturedAppearance;
 
-public class Scoreboard {
-    private static final float z = (float) (1 / Math.tan(Math.PI/10) / 5) ;
-    private TransformGroup tg;
-    private TransformGroup[] digits;
-    private int [] counts;
+/**
+ * A score board object to place in your scene
+ */
+public class Scoreboard extends TransformGroup {
+    /** The transform groups for each dial */
+    private TransformGroup[] dials;
+    /** The current value of each digit. <br>
+     * Digits 2,1,0 are player 1 while digits 5,4,3 are player 2 */
+    private int [] digitValues;
+    /** The angle between each symbol on a dial */
+    private static final float da = (float) (Math.PI / 5.0);
+    /** The rotation interpolators for each digit */
+    private RotationInterpolator[] rerps ;
 
-    public Scoreboard (Point3d p) {
-        this.counts = new int[6];
-        this.digits = new TransformGroup[6];
-        for(int i=0;i<6;i++) this.counts[i]=0;
-        this.tg = createBoard();
+    /**
+     * Only constructor. Only needs a position vector. <br>
+     * Creates a fricken time machine that you can increment the score of.
+     * @param p The position the centre of this machine should be at
+     */
+    public Scoreboard (Vector3d p) {
+        // Create our main parent transform group
+        super();
+        Transform3D t = new Transform3D();
+        t.setTranslation(p);
+        super.setTransform(t);
+        // Initialize the digits
+        this.digitValues = new int[6];
+        for(int i=0;i<6;i++) this.digitValues[i]=0;
+        this.dials = new TransformGroup[6];
+        createBoard();
+        this.rerps = new RotationInterpolator[6];
+        for (int i=0; i<6; i++) {
+            this.rerps[i]=createRerp(this.dials[i]);
+            this.dials[i].addChild(this.rerps[i]);
+        }
+        
     }
 
-    public TransformGroup getTG () {
-        return this.tg;
-    }
-
-    public void updateScore(int score, int player) {
-        if (player == 1) {
-            for(int t=0; t<score; t++) {
-                rotateScore(2);
-                if(counts[2] == 0) {
-                    rotateScore(1);
-                    if(counts[1] == 0) {
-                        rotateScore(0);
-                    }
-                }
+    /**
+     * Scores a point for player 1. <p>
+     * Increases the score for player 1 by 1,
+     * by rotating the dial to the next digit and
+     * carrying when necessary.
+     */
+    public void scoreP1 () {
+        changeRerp(2);
+        if(digitValues[2] == 0) {
+            changeRerp(1);
+            if(digitValues[1] == 0) {
+                changeRerp(0);
             }
         }
-        if(player == 2) {
-            for(int t=0; t<score; t++) {
-                rotateScore(5);
-                if(counts[5] == 0) {
-                    rotateScore(4);
-                    if(counts[4] == 0) {
-                        rotateScore(3);
-                    }
-                }
-            }			
+    }
+
+    /**
+     * Scores a point for player 2. <p>
+     * Increases the score for player 2 by 1,
+     * by rotating the dial to the next digit and
+     * carrying when necessary.
+     */
+    public void scoreP2 () {
+        changeRerp(5);
+        if(digitValues[5] == 0) {
+            changeRerp(4);
+            if(digitValues[4] == 0) {
+                changeRerp(3);
+            }
         }
     }
-    
-    private void rotateScore(int position) {
-        this.counts[position] = (this.counts[position] + 1) % 10;
-        System.out.println(position + " " + this.counts[position]);
-        Transform3D temp = new Transform3D();
-        Matrix4d mat = new Matrix4d();
-        digits[position].getTransform(temp);
-        temp.get(mat);
-        Matrix4d m4d = new Matrix4d();
-        m4d.rotX(-Math.PI/5);
-        mat.mul(m4d);
-        temp.set(mat);
-        digits[position].setTransform(temp);
+
+    /**
+     * Updates the rotation interpolator at the given
+     * index to rotate to the next digit for the dial
+     * of the same index.
+     * @param index The dial index to increment
+     */
+    private void changeRerp (int index) {
+        RotationInterpolator rerp = this.rerps[index];      // Get rotation interpolator in question
+        float curAngle = getCurrentAngle(rerp);             // Get the current angle of the rotation interpolator
+        int i = this.digitValues[index] + 1 ;               // Increment the digit value
+        this.digitValues[index] = i % 10;                   // Update the new value of the digit, clamping it below 10
+        float targetAngle = i * da;                         // The angle we are aiming to rotate to
+        if (targetAngle - curAngle > Math.PI)               // If turning more than 180 deg to the right...
+            targetAngle -= 2*Math.PI;                       // Then rotate in the other direction instead
+        if (targetAngle - curAngle < -Math.PI)              // If turning more than 180 to the left...
+            targetAngle += 2*Math.PI;                       // Then rotate in the other directio instead
+        rerp.setMinimumAngle(curAngle);                     // Set min to current
+        rerp.setMaximumAngle(targetAngle);                  // Set max to target
+        Alpha alpha = new Alpha(1, 800l);                   // Create a new alpha, 800ms long
+        alpha.setStartTime(System.currentTimeMillis());     // Set the new start time to now, start rotating now
+        rerp.setAlpha(alpha);                               // Set the alpha for the rerp
+    }
+
+    /**
+     * Calculates the angle the given rotation interpolator
+     * is currently at, based on it's alpha.
+     * @param r The rotation interpolator to check
+     * @return The current angle of the rerp: [0.0, 2pi)
+     */
+    private static float getCurrentAngle (RotationInterpolator r) {
+        float min = r.getMinimumAngle();        // The current minimum angle
+        float dif = r.getMaximumAngle() - min;  // The change of angle, angle from min to max
+        float progress = r.getAlpha().value();  // 0.0 -> 1.0 progress of the alpha
+        float curAngle = min + progress*dif;    // The current angle the dial is at
+        return (float)(curAngle % (2*Math.PI)); // Clamp answer between 0.0 -> 2pi
+    }
+
+    /**
+     * Creates a rotation interpolator with blank values
+     * for the given transform group.
+     * @param target The target transformgroup to rotate
+     * @return The newly created rotation interpolator
+     */
+    private RotationInterpolator createRerp (TransformGroup target) {
+        Transform3D yAxis = new Transform3D();
+        yAxis.rotZ(Math.PI/2);
+        Alpha rotationAlpha = new Alpha(1, 0, 0, 800, 200, 0); // Rotate for 800ms, accelerating for 200ms at the beginning
+        RotationInterpolator rot_beh = new RotationInterpolator(rotationAlpha, target, yAxis, 0, 0);
+        BoundingSphere bounds = new BoundingSphere(new Point3d(0.0, 0.0, 0.0), 100.0);
+        rot_beh.setSchedulingBounds(bounds);
+        rot_beh.setEnable(true);
+        return rot_beh;
     }
     
-    private TransformGroup createBoard() {
-        TransformGroup boardTG = new TransformGroup();
+    /**
+     * Creates the the whole thing assigns the
+     * references to the appropriate members.
+     */
+    private void createBoard() {
         Transform3D back3D = new Transform3D();
         back3D.setTranslation(new Vector3f(-0.09f, -0.41f, 0.6f));
         TransformGroup backTG = new TransformGroup(back3D);
-        boardTG.addChild(backTG);
-        backTG.addChild(board(4));
+        super.addChild(backTG);
+        backTG.addChild(createBoard(4));
+        Transform3D edgeT3D = new Transform3D();
+        edgeT3D.setTranslation(new Vector3f(0.2f, 4.6f, 0f));
         TransformGroup edgeTG = new TransformGroup();
         backTG.addChild(edgeTG);
         edgeTG.addChild(edge(1));
-        edgeTG.addChild(text3D("Player1     Player2", new Color3f(1.0f, 1.0f, 1.0f), new Point3f(-0.2f, 4.6f, 0f)));
+        edgeTG.addChild(createText3D("Player1     Player2", new Color3f(1.0f, 1.0f, 1.0f)));
 
         TransformGroup numberTG = new TransformGroup();
-        boardTG.addChild(numberTG);
+        super.addChild(numberTG);
         Transform3D[] transform3ds = new Transform3D[6];
         TransformGroup[] sceneTG = new TransformGroup[6];	
         
@@ -102,91 +177,96 @@ public class Scoreboard {
             transform3ds[i].setTranslation(new Vector3f(x, 0f, 0f));
             sceneTG[i] = new TransformGroup(transform3ds[i]);
             if(i<3)
-                sceneTG[i].addChild(createNumber(new Color3f(1.0f, 0.0f, 0.0f)));
+                sceneTG[i].addChild(createDial(new Color3f(1.0f, 0.0f, 0.0f)));
             else 
-                sceneTG[i].addChild(createNumber(new Color3f(0.0f, 0.0f, 1.0f)));				
-            digits[i] = new TransformGroup();
-            digits[i].setCapability(TransformGroup.ALLOW_TRANSFORM_WRITE);
-            digits[i].addChild(sceneTG[i]);
-            numberTG.addChild(digits[i]);
+                sceneTG[i].addChild(createDial(new Color3f(0.0f, 0.0f, 1.0f)));				
+            dials[i] = new TransformGroup();
+            dials[i].setCapability(TransformGroup.ALLOW_TRANSFORM_WRITE);
+            dials[i].addChild(sceneTG[i]);
+            numberTG.addChild(dials[i]);
         }
-        return boardTG;
     }
     
-    private static TransformGroup createNumber(Color3f clr) {
-        TransformGroup ts = new TransformGroup();
-        Transform3D[] transform3ds = new Transform3D[10];
-        TransformGroup[] sceneTG = new TransformGroup[10];
-        
-//		Transform3D[] number3ds = new Transform3D[10];
-//		TransformGroup[] numberTG = new TransformGroup[10];		
-        for(int i=0; i<10; i++) {
-            transform3ds[i] = new Transform3D();
-            transform3ds[i].rotX(i * Math.PI / 5);
+    /**
+     * Creates a dial object for use in our score board. <br>
+     * The dial is a 10 sided polygon with digit symbols on each side. <br>
+     * Check {@link #createSide(Color3f)} to figure out the dimensions of the shape.
+     * @param bgclr The colour of the dial, not the digit symbol
+     * @return A new transform group containing the digits and sides
+     */
+    private static TransformGroup createDial(Color3f bgclr) {
+        TransformGroup number = new TransformGroup();       // The main transform group for 
+        Transform3D[] transform3ds = new Transform3D[10];   // A transform for each digit symbol, (0-9)
+        TransformGroup[] sceneTG = new TransformGroup[10];  // A transform group for each digit symbol, (0-9)
+        Color3f digitClr = new Color3f(1.0f, 1.0f, 1.0f);   // The colour of each digit symbol
+        Vector3f offset = new Vector3f(0, 0f, 0.61f);       // Offset to keep the digit symbol centred
+        Transform3D t = new Transform3D();                  // Create the translation transform
+        t.setTranslation(offset);                           // Set the translation
+        for (int i = 0 ; i < 10 ; i++) {                    // Create each digit symbol and put it on the dial
+            transform3ds[i] = new Transform3D();            // Create a new transform to put the digit symbol in place
+            transform3ds[i].rotX(i*da);                     // Rotate to the right angle
+            transform3ds[i].mul(t);                         // But not before translating it into place
             sceneTG[i] = new TransformGroup(transform3ds[i]);
-            sceneTG[i].addChild(square(clr));
-            
-//			number3ds[i] = new Transform3D();
-//			number3ds[i].setTranslation(new Vector3f(0f, -0.5f, 0f));
-//			numberTG[i] = new TransformGroup(number3ds[i]);
-            int temp = i;
-            sceneTG[i].addChild(text3D(String.valueOf(temp), new Color3f(1.0f, 1.0f, 1.0f), new Point3f(0f, -0.3f, 5 * z)));
-            
-//			sceneTG[i].addChild(numberTG[i]);
-            ts.addChild(sceneTG[i]);
+            sceneTG[i].setCapability(TransformGroup.ALLOW_TRANSFORM_WRITE);
+            sceneTG[i].addChild(createSide(bgclr)); // background for each digit
+            sceneTG[i].addChild(createText3D(""+i, digitClr));
+            number.addChild(sceneTG[i]);
         }
-        return ts;
+        return number;
     }
 
-    private static TransformGroup text3D(String text, Color3f clr, Point3f pnt) {
+    /**
+     * Static method to create 3D text of the given text and colour. <p>
+     * The text should be roughly centred, really flat, and 0.2 tall.
+     * @param text The string the text should say
+     * @param clr The colour of the text
+     * @return The new transform group containing the text. Don't change it's transform.
+     */
+    private static TransformGroup createText3D(String text, Color3f clr) {
         Font my2DFont = new Font(text, Font.PLAIN, 1); //create 3d font
         FontExtrusion myExtru = new FontExtrusion();
         Font3D my3DFont = new Font3D(my2DFont, myExtru);// create 3d font
         Appearance app = new Appearance();				//create new appearance
         app.setColoringAttributes(new ColoringAttributes(clr, 1));		//set the color of the text according to the argument clr
 
-        Text3D text1 = new Text3D(my3DFont, text, pnt, 0, 1); // make 3d text
-
-        Transform3D scaler = new Transform3D();
-        scaler.setScale(0.2);							//scale the 3D text based on the factor 
-                
-        TransformGroup ts = new TransformGroup(scaler);
+        Text3D text1 = new Text3D(my3DFont, text, new Point3f(), 0, 1); // make 3d text
+        // Scale and translate the text
+        Transform3D scaler = new Transform3D(); scaler.setScale(new Vector3d(0.2, 0.2, 1.0/(1<<8)));
+        Transform3D trans = new Transform3D(); trans.setTranslation(new Vector3f(0, -0.1f, 0));
+        trans.mul(scaler);
+        // Add the new text and transform to the transform group 
+        TransformGroup ts = new TransformGroup(trans);
+        ts.setCapability(TransformGroup.ALLOW_TRANSFORM_WRITE);
         ts.addChild(new Shape3D(text1, app));
         return ts;		
     }
 
-    private static Shape3D square(Color3f clr) {
-
-        QuadArray square = new QuadArray(4, QuadArray.NORMALS | QuadArray.COLOR_3 | QuadArray.COORDINATES); //quadArray to define one side
-        Point3f[] pt1 = {new Point3f(0.1f, 0.2f, z), new Point3f(-0.1f, 0.2f, z), new Point3f(-0.1f, -0.2f, z), new Point3f(0.1f, -0.2f, z)};
+    /**
+     * Creates a rectangle of ratio 1:2 for making
+     * the 10 sided polygon that is the dial.
+     * @param clr The colour of the rectangle.
+     * @return The newly created shape3d of the rectangle
+     */
+    private static Shape3D createSide(Color3f clr) {
+        QuadArray square = new QuadArray(4, QuadArray.NORMALS | QuadArray.COORDINATES); //quadArray to define one side
+        Point3f[] pt1 = {new Point3f(0.1f, 0.2f, 0), new Point3f(-0.1f, 0.2f, 0), new Point3f(-0.1f, -0.2f, 0), new Point3f(0.1f, -0.2f, 0)};
         float[] normal = {0, 0, 1};
         for(int i = 0; i<4; i++) {
             square.setCoordinate(i, pt1[i]);//set coordinates
-            square.setColor(i, clr);	//set colors
             square.setNormal(i, normal);	//set surface normal
         }
-        Appearance app = new Appearance();	
-        app.setMaterial(setMaterial(new Color3f(0.0f, 1.0f, 1.0f)));	//set appearance
-        
+        Appearance app = new Appearance();
+        app.setMaterial(MaterialFactory.createMaterial(clr));
         return new Shape3D(square, app);
     }
 
-    private static Material setMaterial(Color3f clr) {
-        int SH = 128;
-        Color3f newColor = new Color3f(0.7f*clr.x, 0.7f*clr.y, 0.7f*clr.z);
-        Material ma = new Material();
-        ma.setAmbientColor(newColor);
-        ma.setEmissiveColor(new Color3f(0.0f, 0.0f, 0.0f));
-        ma.setDiffuseColor(newColor);
-        ma.setSpecularColor(newColor);
-        ma.setShininess(SH);
-        ma.setLightingEnable(true);
-        return ma;
-
-    }
-
-    private static TransformGroup board(float factor) {
-        QuadArray square = new QuadArray(4, QuadArray.NORMALS | QuadArray.COLOR_3 | QuadArray.COORDINATES | QuadArray.TEXTURE_COORDINATE_2); //quadArray to define one side
+    /**
+     * Creates the inner margin of the backboard
+     * @param factor A multiplier to scale the size
+     * @return The new transformgroup containing the new shape
+     */
+    private static TransformGroup createBoard(float factor) {
+        QuadArray square = new QuadArray(4, QuadArray.NORMALS | QuadArray.COORDINATES | QuadArray.TEXTURE_COORDINATE_2); //quadArray to define one side
         Point3f[] pt1 = {new Point3f(0.29f, 0f, 0.0f), new Point3f(0.29f, 0.21f, 0.0f), new Point3f(-0.29f, 0.21f, 0.0f), new Point3f(-0.29f, 0f, 0.0f)};
         float[] normal = {0, 0, 1};
         
@@ -203,7 +283,6 @@ public class Scoreboard {
         
         for(int i = 0; i<4; i++) {
             square.setCoordinate(i, pt1[i]);//set coordinates
-//			square.setColor(i, clr);	//set colors
             square.setNormal(i, normal);	//set surface normal
         }
         square.setTextureCoordinate(0, 0, uv0);
@@ -214,25 +293,16 @@ public class Scoreboard {
         Appearance app = new TexturedAppearance("ledscreen.png");
         TransformGroup board = new TransformGroup();
         board.addChild(new Shape3D(square, app));
-        
-//		board.addChild(score(factor));
         return board;
     }
 
-    private static RotationInterpolator rotateBehavior(int r_num, TransformGroup my_TG) {
-
-        my_TG.setCapability(TransformGroup.ALLOW_TRANSFORM_WRITE);
-        Transform3D yAxis = new Transform3D();
-        yAxis.rotZ(Math.PI/2);
-        Alpha rotationAlpha = new Alpha(1, r_num);
-        RotationInterpolator rot_beh = new RotationInterpolator(rotationAlpha, my_TG, yAxis, 0f, (float) Math.PI /5f);
-        BoundingSphere bounds = new BoundingSphere(new Point3d(0.0, 0.0, 0.0), 100.0);
-        rot_beh.setSchedulingBounds(bounds);
-        return rot_beh;
-    }
-
+    /**
+     * Creates the outer padding of the backboard
+     * @param factor Scalar multiplier to scale the size
+     * @return The new transformgroup containing the new shape
+     */
     private static TransformGroup edge(float factor) {
-        QuadArray square = new QuadArray(4, QuadArray.NORMALS | QuadArray.COLOR_3 | QuadArray.COORDINATES | QuadArray.TEXTURE_COORDINATE_2); //quadArray to define one side
+        QuadArray square = new QuadArray(4, QuadArray.NORMALS | QuadArray.COORDINATES | QuadArray.TEXTURE_COORDINATE_2); //quadArray to define one side
         
         Point3f[] pts = new Point3f[4];
         pts[0] = new Point3f(1.4f, 1.18f, -0.1f);
@@ -254,7 +324,6 @@ public class Scoreboard {
         
         for(int i = 0; i<4; i++) {
             square.setCoordinate(i, pts[i]);//set coordinates
-//			square.setColor(i, clr);	//set colors
             square.setNormal(i, normal);	//set surface normal
         }
         square.setTextureCoordinate(0, 0, uv0);
@@ -266,7 +335,6 @@ public class Scoreboard {
         TransformGroup board = new TransformGroup();
         board.addChild(new Shape3D(square, app));
         
-//		board.addChild(score(factor));
         return board;
     }
 }
