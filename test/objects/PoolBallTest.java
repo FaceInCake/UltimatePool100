@@ -33,7 +33,7 @@ public class PoolBallTest extends BasicView implements KeyListener {
         QuadArray geom = new QuadArray(4, format);
         float wr = (float)PoolBallManager.width_2;
         float lr = (float)PoolBallManager.length_2;
-        float h = (float)(PoolBall.height - PoolBall.radius);
+        float h = PoolBall.height;
         float coordinates[] = {
             -wr, h, -lr,    -wr, h, +lr,
             +wr, h, +lr,    +wr, h, -lr
@@ -100,7 +100,7 @@ public class PoolBallTest extends BasicView implements KeyListener {
         content.addChild(createSquare());
         for (int i=0; i<6; i++) {
             content.addChild(createCircle(
-                new Point3d(PoolBallManager.pockets[i].x, PoolBall.height, PoolBallManager.pockets[i].y),
+                new Point3d(PoolBallManager.pockets[i].x, PoolBall.height+0.0001, PoolBallManager.pockets[i].y),
                 (float) PoolBallManager.pocketRadius
             ));
         }

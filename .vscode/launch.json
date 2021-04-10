@@ -6,6 +6,13 @@
     "configurations": [
         {
             "type": "java",
+            "name": "Launch PoolTableTester",
+            "request": "launch",
+            "mainClass": "objects.PoolTableTester",
+            "projectName": "UltimatePool100"
+        },
+        {
+            "type": "java",
             "name": "Launch PoolBallViewer",
             "request": "launch",
             "mainClass": "objects.PoolBallViewer",

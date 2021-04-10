@@ -9,15 +9,17 @@ import org.jogamp.vecmath.Color3f;
 import org.jogamp.vecmath.Vector3d;
 
 /**
- * Abstract class for a pool ball.
- * Subclass this, calling the super constructor and
- * filling in the appropriate values (colour and point value)
+ * When constructed, returns a pool ball object.
+ * Which is a TransformGroup which contains a sphere and
+ * fields for computing physics.
  */
 public class PoolBall extends TransformGroup {
-    /** The Y-up value that all balls spawn and rest at */
-    public static final double height = 0.5;
+    /** The Y-up value that all balls rest ON, not at */
+    public static final float height = PoolTable.surfaceHeight;
     /** The radius of each pool ball */
     public static final float radius = 0.02625f;
+    /** The y-up position for pool balls to spawn and rest AT */
+    public static final float yPos = height + radius;
     /** Equal to {@link #radius} squared */
     public static final float radius2 = radius * radius;
     /** Drag coefficient for slowing down pool balls, spd*dragCo per frame */
@@ -96,8 +98,8 @@ public class PoolBall extends TransformGroup {
         this.pointValue = type.pointValue;
         this.clr = type.colour;
         this.t = new Transform3D();
-        this.prevPos = new Vector3d(x, height, z);
-        this.pos = new Vector3d(x, height, z);
+        this.prevPos = new Vector3d(x, yPos, z);
+        this.pos = new Vector3d(x, yPos, z);
         this.vel = new Vector3d();
         this.inMotion = false;
         this.t.setTranslation(this.pos);
@@ -197,7 +199,7 @@ public class PoolBall extends TransformGroup {
      * @return New vector position of this pool ball's position
      */
     public Vector3d getPos () {
-        return new Vector3d(this.getPosX(), PoolBall.height, this.getPosZ());
+        return new Vector3d(this.getPosX(), PoolBall.yPos, this.getPosZ());
     }
 
     /**
@@ -208,7 +210,7 @@ public class PoolBall extends TransformGroup {
      */
     public void setPos (double x, double z) {
         this.prevPos.set(this.pos);
-        this.pos.set(x, PoolBall.height, z);
+        this.pos.set(x, PoolBall.yPos, z);
         this.t.setTranslation(this.pos);
         super.setTransform(this.t);
     }
