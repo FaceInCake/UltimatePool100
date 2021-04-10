@@ -2,9 +2,11 @@ package objects;
 
 import org.jogamp.java3d.Appearance;
 import org.jogamp.java3d.Material;
+import org.jogamp.java3d.Switch;
 import org.jogamp.java3d.Transform3D;
 import org.jogamp.java3d.TransformGroup;
 import org.jogamp.java3d.utils.geometry.Sphere;
+import org.jogamp.java3d.utils.geometry.Cylinder;
 import org.jogamp.vecmath.Color3f;
 import org.jogamp.vecmath.Vector3d;
 
@@ -32,6 +34,8 @@ public class PoolBall extends TransformGroup {
     public static final double spdLimit2 = spdLimit * spdLimit;
     /** The transform that translates this ball to it's position */
     private Transform3D t;
+    /** Switch to allow the changing of the poolball shape */
+    private Switch sw;
     /** Number of points this ball is worth */ 
     private int pointValue;
     /** Colour of the sphere for this ball */
@@ -95,6 +99,7 @@ public class PoolBall extends TransformGroup {
     public PoolBall (Type type, double x, double z) {
         super();
         super.setCapability(TransformGroup.ALLOW_TRANSFORM_WRITE);
+        super.setCapability(TransformGroup.ALLOW_CHILDREN_WRITE);
         this.pointValue = type.pointValue;
         this.clr = type.colour;
         this.t = new Transform3D();
@@ -103,15 +108,27 @@ public class PoolBall extends TransformGroup {
         this.vel = new Vector3d();
         this.inMotion = false;
         this.t.setTranslation(this.pos);
+        this.sw = new Switch();
+        this.sw.setCapability(Switch.ALLOW_SWITCH_WRITE);
+        this.sw.setCapability(Switch.ALLOW_CHILDREN_WRITE);
         super.setTransform(this.t);
+        Appearance app = createBallAppearance(clr);
         Sphere sphere = new Sphere(
             PoolBall.radius, // Radius of the ball
             Sphere.GENERATE_NORMALS, // Capability flags
             128, // Fidelity of sphere, number of polygons
-            createBallAppearance(clr)
+            app // The appearance object
         );
-        sphere.setUserData(this);
-        super.addChild(sphere);
+        Cylinder cylinder = new Cylinder(
+            PoolBall.radius, // Radius of cylinder
+            PoolBall.radius, // Length of cylinder
+            Cylinder.GENERATE_NORMALS, // capability flags
+            app // appearance of object
+        );
+        super.addChild(this.sw);
+        this.sw.addChild(sphere);
+        this.sw.addChild(cylinder);
+        this.sw.setWhichChild(0);
     }
     
     /**
@@ -146,15 +163,6 @@ public class PoolBall extends TransformGroup {
      */
     public Color3f getColour () {
         return this.clr;
-    }
-    
-    /**
-     * Static method that returns the y-up height that all
-     * pool balls spawn, move, and rest at.
-     * @return Height position on the y-up axis
-     */
-    public static double getHeight () {
-        return PoolBall.height;
     }
 
     /**
@@ -276,6 +284,15 @@ public class PoolBall extends TransformGroup {
      */
     public boolean isInMotion () {
         return this.inMotion;
+    }
+
+    /**
+     * Swaps the pool ball shape to either sphere or cylinder
+     */
+    public void swapShapes () {
+        this.sw.setWhichChild(
+            (this.sw.getWhichChild()>0)?0:1
+        );
     }
 
 }

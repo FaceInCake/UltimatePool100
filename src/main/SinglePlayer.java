@@ -47,7 +47,7 @@ public class SinglePlayer extends BasicView implements KeyListener {
 		t.lookAt(new Point3d(2,1,2), new Point3d(0, -50, 0), new Vector3d(0,1,0));
 		t.invert();     setViewTransform(t);
 		content.addChild(this.gcc = new GroundedCamController(this));
-
+        
         // Add the pool table
         content.addChild(new PoolTable(new Vector3f(0, PoolTable.legHeight/2, 0)));
 		
@@ -85,6 +85,9 @@ public class SinglePlayer extends BasicView implements KeyListener {
         } else
         if (key == KeyEvent.VK_PERIOD) {
             this.sb.scoreP2();
+        } else
+        if (key == KeyEvent.VK_T) {
+            this.pbm.swapShapes();
         }
     }
 

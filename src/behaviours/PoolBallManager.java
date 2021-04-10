@@ -297,4 +297,13 @@ public class PoolBallManager extends Behavior {
         super.wakeupOn(WC_onTick);
     }
 
+    public void swapShapes () {
+        for (int i=0; i<22; i++) {
+            PoolBall pb = this.poolballs[i];
+            if (pb != null) {
+                pb.swapShapes();
+            }
+        }
+    }
+
 }
