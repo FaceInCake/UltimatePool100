@@ -11,9 +11,23 @@ import org.jogamp.vecmath.Vector3f;
 import appearances.MaterialFactory;
 import appearances.TexturedAppearance;
 
+/**
+ * This class contains four walls facing inwards,
+ * a simple room, so to speak.
+ */
 public class SimpleRoom extends TransformGroup {
 
-	public static Shape3D createRectangle(Point3f pnt1, Point3f pnt2, Point3f pnt3, Point3f pnt4, float scale, Vector3f normal, String filename) {
+    /**
+     * Private static method for creating a rectangle
+     * @param pnt1 First point of the rectangle
+     * @param pnt2 Second point of the rectangle
+     * @param pnt3 Third point of the rectangle
+     * @param pnt4 Fourth point of the rectangle
+     * @param normal Unit vector which the rectangle faces, and therefore the normal of the face
+     * @param filename Name of texture image file to use for the rectangle
+     * @return
+     */
+	private static Shape3D createRectangle(Point3f pnt1, Point3f pnt2, Point3f pnt3, Point3f pnt4, Vector3f normal, String filename) {
 		int flags = QuadArray.NORMALS | QuadArray.COORDINATES | QuadArray.TEXTURE_COORDINATE_2;
 		QuadArray square = new QuadArray(4, flags); //quadArray to define one side
 		Point3f[] pt1 = {pnt1, pnt2, pnt3, pnt4};
@@ -28,10 +42,17 @@ public class SimpleRoom extends TransformGroup {
 		return new Shape3D(square, app);
 	}
 	
+    /**
+     * Default constructor, creates a simple 2x1x2 room
+     */
 	public SimpleRoom () {
 		this(1.0f);
 	}
 	
+    /**
+     * Full constructor. Allows a scaling factor to make a bigger room/
+     * @param factor Multiplier scale for the size of the room
+     */
 	public SimpleRoom (float factor) {
 		super();
 		
@@ -57,13 +78,12 @@ public class SimpleRoom extends TransformGroup {
 			pnt[i].z = pnt[i].z * factor;
 		}
 
-		float invScale = 1.0f / factor;
-		super.addChild(createRectangle(pnt[4], pnt[3], pnt[2], pnt[7], invScale, down, "roof.png"));	//top
-		super.addChild(createRectangle(pnt[5], pnt[0], pnt[3], pnt[4], invScale, right, "sky.png"));	//left
-		super.addChild(createRectangle(pnt[0], pnt[1], pnt[2], pnt[3], invScale, forward, "sky.png"));	//back
-		super.addChild(createRectangle(pnt[1], pnt[6], pnt[7], pnt[2], invScale, left, "sky.png"));	//right
-		super.addChild(createRectangle(pnt[6], pnt[5], pnt[4], pnt[7], invScale, back, "sky.png"));	//front
-		super.addChild(createRectangle(pnt[5], pnt[6], pnt[1], pnt[0], invScale, up, "floor.png"));	//bottom
+		super.addChild(createRectangle(pnt[4], pnt[3], pnt[2], pnt[7], down, "roof.png"));	//top
+		super.addChild(createRectangle(pnt[5], pnt[0], pnt[3], pnt[4], right, "sky.png"));	//left
+		super.addChild(createRectangle(pnt[0], pnt[1], pnt[2], pnt[3], forward, "sky.png"));	//back
+		super.addChild(createRectangle(pnt[1], pnt[6], pnt[7], pnt[2], left, "sky.png"));	//right
+		super.addChild(createRectangle(pnt[6], pnt[5], pnt[4], pnt[7], back, "sky.png"));	//front
+		super.addChild(createRectangle(pnt[5], pnt[6], pnt[1], pnt[0], up, "floor.png"));	//bottom
 		
 	}
 

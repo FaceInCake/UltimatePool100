@@ -11,12 +11,24 @@ import javax.sound.sampled.DataLine;
 import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.UnsupportedAudioFileException;
 
+/**
+ * Class for playing certain sounds.
+ * Really bare becuase it only plays one sound.
+ */
 public class SoundPlayer {
+    /** Can only stack up to this many sounds of a pool ball at a time */
     public static int maxPoolBall = 4;
+    /** The pool ball clips to use */
     public static Clip[] poolBalls = new Clip [maxPoolBall];
     static{ for(int i=0;i<maxPoolBall;i++) poolBalls[i] = getClip("PoolBall.wav");}
+    /** Current sound clip to play next */
     public static int curPoolBall = 0;
     
+    /**
+     * Private static method for creating a Clip object from an audio file name
+     * @param fileName Name of the audio file to open
+     * @return The newly created Clip object to use
+     */
     private static Clip getClip (String fileName) {
         String filePath = "assets/audio/"+fileName;
         File f = new File(filePath);
@@ -42,6 +54,9 @@ public class SoundPlayer {
         return aclip;
     }
 
+    /**
+     * Plays a pool ball collision sound, can stack up to {@link #maxPoolBall} at a time
+     */
     public static void playPoolBallColl () {
         Clip pb = poolBalls[curPoolBall];
         pb.stop();

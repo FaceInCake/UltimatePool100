@@ -14,9 +14,11 @@ import org.jogamp.java3d.utils.geometry.Box;
  * methods or fields.
  */
 public class PoolTable extends TransformGroup {
-    //dimensions
+    /** Half the length of the pool table */
     public static final float tableLength_2 = 3.569f/2;
+    /** Half the width of the pool table */
     public static final float tableWidth_2 = 1.778f/2;
+    /** Half the thickness of the pool table top board */
     public static final float tableDepth_2 = 0.05f;
     /** The radius of the table legs */
     public static final float legRadius = 0.05f;
@@ -35,6 +37,7 @@ public class PoolTable extends TransformGroup {
     /** An appearance object containing a full black material */
     private static Appearance blackApp = new Appearance();
     static{ blackApp.setColoringAttributes(new ColoringAttributes(new Color3f(), ColoringAttributes.FASTEST)); }
+    /** A list of 2D vectors as coords for all the pockets, origin is centre of table. Should be length 6 */
     public static final Vector2f[] pocketCoords = createPocketCoords();
 
     /**
@@ -54,6 +57,12 @@ public class PoolTable extends TransformGroup {
         super.addChild(createTable());        
     }
 
+    /**
+     * Converts a position vector to a transform with
+     * that position as the translation for the transform.
+     * @param pos The position to translate to
+     * @return The newly created transform, translated by the given pos
+     */
     private static Transform3D transFromPos (Vector3f pos) {
         Transform3D t1 = new Transform3D();
         t1.setTranslation(pos);
@@ -164,6 +173,10 @@ public class PoolTable extends TransformGroup {
         return tgPocket;
     }
 
+    /**
+     * Generates the coordinates for all the pockets
+     * @return the 2D coordinates for all the pockets, top down
+     */
     private static Vector2f[] createPocketCoords () {
         float dx = tableWidth_2 ;
         float dy = tableLength_2 ;

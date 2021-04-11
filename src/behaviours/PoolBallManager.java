@@ -69,7 +69,7 @@ public class PoolBallManager extends Behavior {
         addBall(5, Type.GREEN, Dradius, baulkLine);
         addBall(6, Type.YELLOW, -Dradius, baulkLine);
         addPyramid(7, 5, Type.RED, 0, length/-4 - 2*PoolBall.radius);
-        
+
         BoundingSphere bounds = new BoundingSphere(new Point3d(), 100.0);
         super.setSchedulingBounds(bounds);
         super.setEnable(true);
@@ -297,6 +297,9 @@ public class PoolBallManager extends Behavior {
         super.wakeupOn(WC_onTick);
     }
 
+    /**
+     * Swaps the shapes of the pool balls to either a sphere or a cylinder
+     */
     public void swapShapes () {
         for (int i=0; i<22; i++) {
             PoolBall pb = this.poolballs[i];
