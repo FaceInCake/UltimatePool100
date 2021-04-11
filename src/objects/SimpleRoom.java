@@ -25,7 +25,7 @@ public class SimpleRoom extends TransformGroup {
      * @param pnt4 Fourth point of the rectangle
      * @param normal Unit vector which the rectangle faces, and therefore the normal of the face
      * @param filename Name of texture image file to use for the rectangle
-     * @return
+     * @return Newly created Shape3D of a rectangle, made using the given paramaters
      */
 	private static Shape3D createRectangle(Point3f pnt1, Point3f pnt2, Point3f pnt3, Point3f pnt4, Vector3f normal, String filename) {
 		int flags = QuadArray.NORMALS | QuadArray.COORDINATES | QuadArray.TEXTURE_COORDINATE_2;
