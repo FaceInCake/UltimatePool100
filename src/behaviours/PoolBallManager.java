@@ -7,10 +7,11 @@ import org.jogamp.java3d.TransformGroup;
 import org.jogamp.java3d.WakeupCriterion;
 import org.jogamp.java3d.WakeupOnElapsedFrames;
 import org.jogamp.vecmath.Point3d;
-import org.jogamp.vecmath.Vector2d;
+import org.jogamp.vecmath.Vector2f;
 
 import misc.SoundPlayer;
 import objects.PoolBall;
+import objects.PoolTable;
 import objects.PoolBall.Type;
 
 /**
@@ -21,22 +22,18 @@ import objects.PoolBall.Type;
  */
 public class PoolBallManager extends Behavior {
     /** Width of the table in metres */
-    public static final double width = 1.778;
+    public static final double width = PoolTable.tableWidth_2*2;
     /** Equal to {@link #width} divided by 2 */
     public static final double width_2 = width / 2.0 ;
     /** Length of the table in metres */
-    public static final double length = 3.569;
+    public static final double length = PoolTable.tableLength_2*2;
     /** Equal to {@link #length} divided by 2 */
     public static final double length_2 = length / 2.0 ;
     /** Radius of the corner pocket */
-    public static final double pocketRadius = 4 * PoolBall.radius * Math.sqrt(2);
+    public static final double pocketRadius = PoolTable.pocketRadius;
     /** The distance between the centre of the side pocket and the side of the pool table */
     public static final double sideDif = 0;//Math.sqrt(28 * PoolBall.radius2);
-    public static final Vector2d[] pockets = {
-        new Vector2d(-width_2, -length_2), new Vector2d(+width_2, -length_2),
-        new Vector2d(+width_2, +length_2), new Vector2d(-width_2, +length_2),
-        new Vector2d(-width_2-sideDif, 0), new Vector2d(+width_2+sideDif, 0)
-    };
+    public static final Vector2f[] pockets = PoolTable.pocketCoords;
     /** static wake up criterion to run on tick, (every frame) */
     private static WakeupCriterion WC_onTick = new WakeupOnElapsedFrames(0);
     /** Array of all 22 pool balls to iterate over.<br>
@@ -108,9 +105,6 @@ public class PoolBallManager extends Behavior {
         }
     }
     
-    /** 
-     * 
-    */
     /**
      * Shortcut function for adding pool balls for the constructor
      * @param i Index to add to
@@ -301,6 +295,15 @@ public class PoolBallManager extends Behavior {
     public void processStimulus(Iterator<WakeupCriterion> arg0) {
         movePoolBalls();
         super.wakeupOn(WC_onTick);
+    }
+
+    public void swapShapes () {
+        for (int i=0; i<22; i++) {
+            PoolBall pb = this.poolballs[i];
+            if (pb != null) {
+                pb.swapShapes();
+            }
+        }
     }
 
 }
