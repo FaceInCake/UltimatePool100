@@ -22,11 +22,11 @@ import jpanels.BasicView;
 import lights.LightFactory;
 
 public class PoolBallTest extends BasicView implements KeyListener {
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
     private FreeCamController fcc;
     private PoolBallManager pbm;
-	
-	public PoolBallTest () {}
+    
+    public PoolBallTest () {}
 
     private Shape3D createSquare () {
         int format = QuadArray.COORDINATES | QuadArray.NORMALS;
@@ -78,23 +78,23 @@ public class PoolBallTest extends BasicView implements KeyListener {
         ));
         return new Shape3D(geom, app);
     }
-	
-	@Override
-	public BranchGroup createContent() {
-		BranchGroup content = new BranchGroup();
-		
+    
+    @Override
+    public BranchGroup createContent() {
+        BranchGroup content = new BranchGroup();
+        
         // Add the lights
-		content.addChild(new AxisFrame());
-		content.addChild(LightFactory.createAmbientLight());
-		content.addChild(LightFactory.createPointLight(new Point3f(0.5f, 1, 0)));
-		
+        content.addChild(new AxisFrame());
+        content.addChild(LightFactory.createAmbientLight());
+        content.addChild(LightFactory.createPointLight(new Point3f(0.5f, 1, 0)));
+        
         // Add the free cam
-		Transform3D t = new Transform3D();
-		t.lookAt(new Point3d(2,2,2), new Point3d(), new Vector3d(0,1,0));
-		t.invert();
-		setViewTransform(t);
-		this.fcc = new FreeCamController(this);
-		content.addChild(fcc);
+        Transform3D t = new Transform3D();
+        t.lookAt(new Point3d(2,2,2), new Point3d(), new Vector3d(0,1,0));
+        t.invert();
+        setViewTransform(t);
+        this.fcc = new FreeCamController(this);
+        content.addChild(fcc);
 
         // Add the square 'pool table'
         content.addChild(createSquare());
@@ -104,24 +104,24 @@ public class PoolBallTest extends BasicView implements KeyListener {
                 (float) PoolBallManager.pocketRadius
             ));
         }
-		
+        
         // Add the pool ball manager
-		this.pbm = new PoolBallManager();
-		content.addChild(pbm.getTG());
+        this.pbm = new PoolBallManager();
+        content.addChild(pbm.getTG());
         content.addChild(pbm);
         this.getCanvas().addKeyListener(this);
 
-		content.compile();
-		return content;
-	}
+        content.compile();
+        return content;
+    }
 
-	public static void main(String[] args) {
-		java.awt.EventQueue.invokeLater(new Runnable() {
+    public static void main(String[] args) {
+        java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-            	new jframes.Window(new PoolBallTest(), "Pool Ball Logic Tester");
+                new jframes.Window(new PoolBallTest(), "Pool Ball Logic Tester");
             }
         });
-	}
+    }
 
     @Override
     public void keyPressed(KeyEvent arg0) {}
